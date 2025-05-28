@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Role;
 use App\Filament\Resources\DepartmentResource\Pages;
 use App\Models\Department;
 use Filament\Forms\Components\Placeholder;
@@ -27,6 +28,11 @@ class DepartmentResource extends Resource
     protected static ?string $navigationGroup = 'System Setup';
 
     protected static ?string $label = 'Department';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->role === Role::Admin;
+    }
 
     public static function form(Form $form): Form
     {
