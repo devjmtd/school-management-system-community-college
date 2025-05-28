@@ -27,6 +27,7 @@ class AdminPortalPanelProvider extends PanelProvider
             ->id('admin-portal')
             ->path('admin-portal')
             ->login()
+            ->profile(isSimple: false)
             ->brandName('Admin Portal')
             ->colors([
                 'primary' => Color::Amber,
