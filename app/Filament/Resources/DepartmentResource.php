@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Enums\Role;
 use App\Filament\Resources\DepartmentResource\Pages;
+use App\Filament\Resources\DepartmentResource\RelationManagers\ProgramsRelationManager;
+use App\Filament\Resources\DepartmentResource\RelationManagers\TeachersRelationManager;
 use App\Models\Department;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -77,6 +79,14 @@ class DepartmentResource extends Resource
             'index' => Pages\ListDepartments::route('/'),
             'create' => Pages\CreateDepartment::route('/create'),
             'edit' => Pages\EditDepartment::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            ProgramsRelationManager::make(),
+            TeachersRelationManager::make(),
         ];
     }
 
