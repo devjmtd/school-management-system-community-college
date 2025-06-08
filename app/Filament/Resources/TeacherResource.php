@@ -39,15 +39,20 @@ class TeacherResource extends Resource
         return auth()->user()->role === Role::Admin || auth()->user()->role === Role::ProgramHead;
     }
 
+    public static function getDepartmentIds(): array
+    {
+        if (auth()->user()->role == Role::Admin) {
+            return Department::get()->pluck('id')->toArray();
+        } elseif (auth()->user()->role == Role::ProgramHead) {
+            return [auth()->user()->department_id];
+        } else {
+            return [];
+        }
+    }
+
     public static function form(Form $form): Form
     {
-        $departmentIds = [];
-
-        if (auth()->user()->role == Role::Admin) {
-            $departmentIds = Department::get()->pluck('id')->toArray();
-        } elseif (auth()->user()->role == Role::ProgramHead) {
-            $departmentIds = [auth()->user()->department_id];
-        }
+        $departmentIds = self::getDepartmentIds();
 
         return $form
             ->schema([
@@ -88,12 +93,6 @@ class TeacherResource extends Resource
             ->modifyQueryUsing(fn(Builder $query): Builder => $query->where('role', Role::Teacher))
             ->actions([
                 EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
