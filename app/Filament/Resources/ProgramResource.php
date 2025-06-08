@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\Role;
 use App\Filament\Resources\DepartmentResource\RelationManagers\TeachersRelationManager;
 use App\Filament\Resources\ProgramResource\Pages;
+use App\Filament\Resources\ProgramResource\RelationManagers\CurriculumsRelationManager;
 use App\Models\Department;
 use App\Models\Program;
 use Filament\Forms\Components\Placeholder;
@@ -12,6 +13,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -87,9 +89,6 @@ class ProgramResource extends Resource
                     ->searchable()
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
             ->actions([
                 EditAction::make(),
             ]);
@@ -101,6 +100,14 @@ class ProgramResource extends Resource
             'index' => Pages\ListPrograms::route('/'),
             'create' => Pages\CreateProgram::route('/create'),
             'edit' => Pages\EditProgram::route('/{record}/edit'),
+            'curriculum' => Pages\EditCurriculum::route('/{record}/curriculums/{curriculum}'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            CurriculumsRelationManager::make(),
         ];
     }
 
