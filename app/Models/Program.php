@@ -12,6 +12,7 @@ class Program extends Model
         'name',
         'code',
         'department_id',
+        'major',
     ];
 
     public function department(): BelongsTo

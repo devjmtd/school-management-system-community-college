@@ -61,6 +61,7 @@ class ProgramResource extends Resource
                     ->schema([
                         TextInput::make('name')
                             ->required(),
+                        TextInput::make('major'),
                         TextInput::make('code')
                             ->required(),
                         Select::make('department_id')
@@ -84,6 +85,7 @@ class ProgramResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('major'),
                 TextColumn::make('code'),
                 TextColumn::make('department.name')
                     ->searchable()
