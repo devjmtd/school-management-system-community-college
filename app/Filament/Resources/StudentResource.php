@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Role;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Models\Student;
 use Filament\Forms\Components\Checkbox;
@@ -30,6 +31,11 @@ class StudentResource extends Resource
     protected static ?string $slug = 'students';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->role === Role::Admin || auth()->user()->role === Role::Registrar;
+    }
 
     public static function form(Form $form): Form
     {
