@@ -44,6 +44,11 @@ class ScheduleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->role === Role::Admin || auth()->user()->role === Role::ProgramHead;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
