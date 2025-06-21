@@ -14,6 +14,13 @@ class Subject extends Model
         'description',
     ];
 
+    protected $appends = ['full_name'];
+
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->code} - {$this->name}";
+    }
+
     public function curriculums(): BelongsToMany
     {
         return $this->belongsToMany(Curriculum::class)

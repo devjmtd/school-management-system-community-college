@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\SchoolYearQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class SchoolYear extends Model
 {
+    protected static string $builder = SchoolYearQueryBuilder::class;
+
     protected $fillable = [
         'name',
         'start_date',

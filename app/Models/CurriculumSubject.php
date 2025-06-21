@@ -15,7 +15,7 @@ class CurriculumSubject extends Pivot implements Sortable
 {
     use SortableTrait;
 
-    public $sortable = [
+    public array $sortable = [
         'order_column_name' => 'order_column',
         'sort_when_creating' => true
     ];
