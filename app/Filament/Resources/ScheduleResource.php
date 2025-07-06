@@ -142,7 +142,17 @@ class ScheduleResource extends Resource
                         Select::make('program_id')
                             ->label('Program')
                             ->searchable()
-                            ->options(Program::all()->pluck('name', 'id')),
+                            ->options(function () {
+                                return Program::all()->mapWithKeys(function ($program) {
+                                        $value = $program->name;
+                                        if ($program->major) {
+                                            $value .= ' - ' . $program->major;
+                                        }
+                                        return [$program->id => $value];
+                                    })->toArray();
+                            })
+                            ->getOptionLabelFromRecordUsing(fn (Program $record) => "{$record->code} - {$record->name}".(isset($record->major) ? ' major in '.$record->major->name : ''))
+                        ,
                         Select::make('year_level')
                             ->label('Year Level')
                             ->options(YearLevel::class)
@@ -179,7 +189,8 @@ class ScheduleResource extends Resource
                         }
 
                         if (data_get($data, 'program_id')) {
-                            $indicators[] = "Program: ".Program::findOrFail($data['program_id'])->code;
+                            $program = Program::findOrFail($data['program_id']);
+                            $indicators[] = "Program: ".$program->code.(isset($program->major) ? ' - '.$program->major : '');
                         }
 
                         if (data_get($data, 'year_level')) {

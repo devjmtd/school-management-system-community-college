@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enums\Role;
+use App\Models\Department;
+use App\Models\Program;
+use App\Models\SchoolYear;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,5 +27,9 @@ class DatabaseSeeder extends Seeder
                 'password' => \Hash::make('Welcome123'),
             ]);
         }
+
+        $this->call([
+            ProgramSeeder::class,
+        ]);
     }
 }
