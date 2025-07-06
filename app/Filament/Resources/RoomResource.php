@@ -2,18 +2,21 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\RoomResource\Pages\ListRooms;
+use App\Filament\Resources\RoomResource\Pages\CreateRoom;
+use App\Filament\Resources\RoomResource\Pages\EditRoom;
 use App\Enums\Role;
 use App\Filament\Resources\RoomResource\Pages;
 use App\Models\Room;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -23,9 +26,9 @@ class RoomResource extends Resource
 
     protected static ?string $slug = 'rooms';
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-library';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-library';
 
-    protected static ?string $navigationGroup = 'System Setup';
+    protected static string | \UnitEnum | null $navigationGroup = 'System Setup';
 
     protected static ?string $label = 'Room';
 
@@ -34,10 +37,10 @@ class RoomResource extends Resource
         return auth()->user()->role === Role::Admin;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Room Information')
                     ->schema([
                         TextInput::make('name')
@@ -65,11 +68,11 @@ class RoomResource extends Resource
                     ->sortable(),
                 TextColumn::make('capacity'),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
@@ -79,9 +82,9 @@ class RoomResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRooms::route('/'),
-            'create' => Pages\CreateRoom::route('/create'),
-            'edit' => Pages\EditRoom::route('/{record}/edit'),
+            'index' => ListRooms::route('/'),
+            'create' => CreateRoom::route('/create'),
+            'edit' => EditRoom::route('/{record}/edit'),
         ];
     }
 

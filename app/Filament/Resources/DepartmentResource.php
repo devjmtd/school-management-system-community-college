@@ -2,20 +2,23 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\DepartmentResource\Pages\ListDepartments;
+use App\Filament\Resources\DepartmentResource\Pages\CreateDepartment;
+use App\Filament\Resources\DepartmentResource\Pages\EditDepartment;
 use App\Enums\Role;
 use App\Filament\Resources\DepartmentResource\Pages;
 use App\Filament\Resources\DepartmentResource\RelationManagers\ProgramsRelationManager;
 use App\Filament\Resources\DepartmentResource\RelationManagers\TeachersRelationManager;
 use App\Models\Department;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -25,9 +28,9 @@ class DepartmentResource extends Resource
 
     protected static ?string $slug = 'departments';
 
-    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-book-open';
 
-    protected static ?string $navigationGroup = 'System Setup';
+    protected static string | \UnitEnum | null $navigationGroup = 'System Setup';
 
     protected static ?string $label = 'Department';
 
@@ -36,10 +39,10 @@ class DepartmentResource extends Resource
         return auth()->user()->role === Role::Admin;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make('Department Information')
                     ->schema([
                         TextInput::make('name')
@@ -62,11 +65,11 @@ class DepartmentResource extends Resource
                     ->searchable()
                     ->sortable(),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
@@ -76,9 +79,9 @@ class DepartmentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDepartments::route('/'),
-            'create' => Pages\CreateDepartment::route('/create'),
-            'edit' => Pages\EditDepartment::route('/{record}/edit'),
+            'index' => ListDepartments::route('/'),
+            'create' => CreateDepartment::route('/create'),
+            'edit' => EditDepartment::route('/{record}/edit'),
         ];
     }
 

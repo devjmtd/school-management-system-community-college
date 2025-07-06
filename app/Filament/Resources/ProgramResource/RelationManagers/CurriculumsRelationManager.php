@@ -2,9 +2,15 @@
 
 namespace App\Filament\Resources\ProgramResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 use App\Filament\Resources\ProgramResource\Pages\EditCurriculum;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -15,14 +21,14 @@ class CurriculumsRelationManager extends RelationManager
 {
     protected static string $relationship = 'curriculums';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('school_year_id')
+                Select::make('school_year_id')
                     ->relationship('schoolYear', 'name'),
             ]);
     }
@@ -32,15 +38,15 @@ class CurriculumsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('schoolYear.name'),
+                TextColumn::make('name'),
+                TextColumn::make('schoolYear.name'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make(),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('edit-curriculum')
+            ->recordActions([
+                EditAction::make(),
+                Action::make('edit-curriculum')
                     ->icon('heroicon-s-list-bullet')
                     ->label('Edit Subjects')
                     ->url(fn ($record): string => EditCurriculum::getUrl(['record' => $this->ownerRecord->getKey(), 'curriculum' => $record->getKey()])),

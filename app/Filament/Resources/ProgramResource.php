@@ -2,6 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\ProgramResource\Pages\ListPrograms;
+use App\Filament\Resources\ProgramResource\Pages\CreateProgram;
+use App\Filament\Resources\ProgramResource\Pages\EditProgram;
+use App\Filament\Resources\ProgramResource\Pages\EditCurriculum;
 use App\Enums\Role;
 use App\Filament\Resources\DepartmentResource\RelationManagers\TeachersRelationManager;
 use App\Filament\Resources\ProgramResource\Pages;
@@ -9,16 +16,13 @@ use App\Filament\Resources\ProgramResource\RelationManagers\CurriculumsRelationM
 use App\Models\Department;
 use App\Models\Program;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,9 +34,9 @@ class ProgramResource extends Resource
 
     protected static ?string $slug = 'programs';
 
-    protected static ?string $navigationIcon = 'heroicon-o-cube';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cube';
 
-    protected static ?string $navigationGroup = 'Department Management';
+    protected static string | \UnitEnum | null $navigationGroup = 'Department Management';
 
     public static function canAccess(): bool
     {
@@ -51,12 +55,12 @@ class ProgramResource extends Resource
     }
 
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $departmentIds = self::getDepartmentIds();
 
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->schema([
                         TextInput::make('name')
@@ -91,7 +95,7 @@ class ProgramResource extends Resource
                     ->searchable()
                     ->sortable(),
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
             ]);
     }
@@ -99,10 +103,10 @@ class ProgramResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPrograms::route('/'),
-            'create' => Pages\CreateProgram::route('/create'),
-            'edit' => Pages\EditProgram::route('/{record}/edit'),
-            'curriculum' => Pages\EditCurriculum::route('/{record}/curriculums/{curriculum}'),
+            'index' => ListPrograms::route('/'),
+            'create' => CreateProgram::route('/create'),
+            'edit' => EditProgram::route('/{record}/edit'),
+            'curriculum' => EditCurriculum::route('/{record}/curriculums/{curriculum}'),
         ];
     }
 

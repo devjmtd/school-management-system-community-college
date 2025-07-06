@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\ProgramResource\Pages;
 
+use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
 use App\Actions\Curriculums\CreateNewSubjectAction;
 use App\Actions\Curriculums\RegisterExistingSubjectAction;
 use App\Data\Curriculums\CreateNewSubjectData;
@@ -18,9 +21,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\Page;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -34,7 +34,7 @@ class EditCurriculum extends Page implements HasTable
 
     protected static string $resource = ProgramResource::class;
 
-    protected static string $view = 'filament.resources.program-resource.pages.edit-curriculum';
+    protected string $view = 'filament.resources.program-resource.pages.edit-curriculum';
 
     public Curriculum $curriculum;
 
@@ -71,7 +71,7 @@ class EditCurriculum extends Page implements HasTable
             ->paginated(false)
             ->headerActions([
                 Action::make('createNewSubject')
-                    ->form([
+                    ->schema([
                         TextInput::make('name')
                             ->required(),
                         TextInput::make('code')
@@ -99,7 +99,7 @@ class EditCurriculum extends Page implements HasTable
                         ));
                     }),
                 Action::make('addExistingSubject')
-                    ->form([
+                    ->schema([
                         Select::make('subject')
                             ->searchable()
                             ->preload()
@@ -125,16 +125,16 @@ class EditCurriculum extends Page implements HasTable
                         ));
                     }),
             ])
-            ->actions([
+            ->recordActions([
                 ViewAction::make('view')
-                    ->infolist([
+                    ->schema([
                         TextEntry::make('name'),
                         TextEntry::make('code'),
                         TextEntry::make('units'),
                         TextEntry::make('description'),
                     ]),
                 EditAction::make('edit')
-                    ->form([
+                    ->schema([
                         Select::make('semester')
                             ->options(Semester::class)
                             ->required(),

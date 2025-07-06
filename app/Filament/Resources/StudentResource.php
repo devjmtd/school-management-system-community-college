@@ -2,6 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\StudentResource\Pages\ListStudents;
+use App\Filament\Resources\StudentResource\Pages\CreateStudent;
+use App\Filament\Resources\StudentResource\Pages\EditStudent;
 use App\Enums\Role;
 use App\Filament\Resources\StudentResource\Pages;
 use App\Models\Student;
@@ -12,15 +23,8 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -30,20 +34,20 @@ class StudentResource extends Resource
 
     protected static ?string $slug = 'students';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function canAccess(): bool
     {
         return auth()->user()->role === Role::Admin || auth()->user()->role === Role::Registrar;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Tabs::make('Student Information')
                     ->tabs([
-                        Tabs\Tab::make('Personal Information')
+                        Tab::make('Personal Information')
                             ->schema([
                                 TextInput::make('first_name')
                                     ->required(),
@@ -63,7 +67,7 @@ class StudentResource extends Resource
                                     ->image()
                                     ->multiple(false),
                         ]),
-                        Tabs\Tab::make('Family Information')
+                        Tab::make('Family Information')
                             ->schema([
                                 TextInput::make('father_name')
                                     ->maxLength(255),
@@ -74,7 +78,7 @@ class StudentResource extends Resource
                                 TextInput::make('mother_occupation')
                                     ->maxLength(255),
                         ]),
-                        Tabs\Tab::make('Education')
+                        Tab::make('Education')
                             ->schema([
                                 TextInput::make('elementary_school'),
                                 TextInput::make('elementary_year')
@@ -83,12 +87,12 @@ class StudentResource extends Resource
                                 TextInput::make('highschool_year')
                                     ->integer(),
                             ]),
-                        Tabs\Tab::make('Contact Information')
+                        Tab::make('Contact Information')
                             ->schema([
                                 TextInput::make('phone_number'),
                                 TextInput::make('email'),
                             ]),
-                        Tabs\Tab::make('Admission Checklist')
+                        Tab::make('Admission Checklist')
                             ->schema([
                                 Repeater::make('admission_checklist')
                                     ->schema([
@@ -100,7 +104,7 @@ class StudentResource extends Resource
                                     ->reorderable(false)
                                     ->deletable(false),
                             ]),
-                        Tabs\Tab::make('Other Information')
+                        Tab::make('Other Information')
                             ->schema([
                                 RichEditor::make('notes'),
                                 Placeholder::make('created_at')
@@ -124,11 +128,11 @@ class StudentResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
@@ -138,9 +142,9 @@ class StudentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStudents::route('/'),
-            'create' => Pages\CreateStudent::route('/create'),
-            'edit' => Pages\EditStudent::route('/{record}/edit'),
+            'index' => ListStudents::route('/'),
+            'create' => CreateStudent::route('/create'),
+            'edit' => EditStudent::route('/{record}/edit'),
         ];
     }
 

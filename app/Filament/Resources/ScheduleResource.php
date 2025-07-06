@@ -2,6 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Grid;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\ScheduleResource\Pages\ListSchedules;
+use App\Filament\Resources\ScheduleResource\Pages\CreateSchedule;
+use App\Filament\Resources\ScheduleResource\Pages\EditSchedule;
 use App\Enums\Role;
 use App\Enums\YearLevel;
 use App\Filament\Resources\ScheduleResource\Pages;
@@ -16,19 +27,11 @@ use App\Rules\RoomAvailabilityRule;
 use App\Rules\TeacherAvailabilityRule;
 use Carbon\WeekDay;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -42,17 +45,17 @@ class ScheduleResource extends Resource
 
     protected static ?string $slug = 'schedules';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function canAccess(): bool
     {
         return auth()->user()->role === Role::Admin || auth()->user()->role === Role::ProgramHead;
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make([
                     Select::make('school_year_id')
                         ->relationship('schoolYear', 'name')
@@ -133,7 +136,7 @@ class ScheduleResource extends Resource
             ])
             ->filters([
                 Filter::make('program')
-                    ->form([
+                    ->schema([
                         Select::make('school_year_id')
                             ->label('School Year')
                             ->default(SchoolYear::current()->first()->id)
@@ -200,11 +203,11 @@ class ScheduleResource extends Resource
                         return $indicators;
                     })
             ])
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
@@ -214,9 +217,9 @@ class ScheduleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSchedules::route('/'),
-            'create' => Pages\CreateSchedule::route('/create'),
-            'edit' => Pages\EditSchedule::route('/{record}/edit'),
+            'index' => ListSchedules::route('/'),
+            'create' => CreateSchedule::route('/create'),
+            'edit' => EditSchedule::route('/{record}/edit'),
         ];
     }
 

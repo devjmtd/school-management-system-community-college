@@ -2,21 +2,24 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\TeacherResource\Pages\ListTeachers;
+use App\Filament\Resources\TeacherResource\Pages\CreateTeacher;
+use App\Filament\Resources\TeacherResource\Pages\EditTeacher;
 use App\Enums\Role;
 use App\Filament\Resources\TeacherResource\Pages;
 use App\Models\Department;
 use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,11 +31,11 @@ class TeacherResource extends Resource
 
     protected static ?string $slug = 'teachers';
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-academic-cap';
 
     protected static ?string $label = 'Teacher';
 
-    protected static ?string $navigationGroup = 'Department Management';
+    protected static string | \UnitEnum | null $navigationGroup = 'Department Management';
 
     public static function canAccess(): bool
     {
@@ -50,12 +53,12 @@ class TeacherResource extends Resource
         }
     }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
         $departmentIds = self::getDepartmentIds();
 
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Section::make()
                     ->schema([
                         TextInput::make('name')
@@ -91,7 +94,7 @@ class TeacherResource extends Resource
                     ->sortable(),
             ])
             ->modifyQueryUsing(fn(Builder $query): Builder => $query->where('role', Role::Teacher))
-            ->actions([
+            ->recordActions([
                 EditAction::make(),
             ]);
     }
@@ -99,9 +102,9 @@ class TeacherResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTeachers::route('/'),
-            'create' => Pages\CreateTeacher::route('/create'),
-            'edit' => Pages\EditTeacher::route('/{record}/edit'),
+            'index' => ListTeachers::route('/'),
+            'create' => CreateTeacher::route('/create'),
+            'edit' => EditTeacher::route('/{record}/edit'),
         ];
     }
 

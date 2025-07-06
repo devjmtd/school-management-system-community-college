@@ -2,12 +2,16 @@
 
 namespace App\Filament\Resources\DepartmentResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
 use App\Enums\Role;
 use App\Filament\Resources\TeacherResource;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -21,11 +25,11 @@ class TeachersRelationManager extends RelationManager
 
     protected static ?string $label = 'Teacher';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make()
+        return $schema
+            ->components([
+                Section::make()
                     ->schema([
                         TextInput::make('name')
                             ->required(),
@@ -45,19 +49,19 @@ class TeachersRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('email'),
+                TextColumn::make('name'),
+                TextColumn::make('email'),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data): array {
+                CreateAction::make()
+                    ->mutateDataUsing(function (array $data): array {
                         $data['role'] = Role::Teacher;
 
                         return $data;
                     }),
             ])
-            ->actions([
-                Tables\Actions\Action::make('edit')
+            ->recordActions([
+                Action::make('edit')
                     ->icon('heroicon-s-pencil-square')
                     ->label('Edit')
                     ->url(fn(User $record) => TeacherResource::getUrl('edit', ['record' => $record->getKey()])),
