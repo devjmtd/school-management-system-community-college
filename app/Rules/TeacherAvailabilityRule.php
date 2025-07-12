@@ -4,13 +4,14 @@ namespace App\Rules;
 
 use App\Models\Schedule;
 use App\Models\SchoolYear;
+use Carbon\WeekDay;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class TeacherAvailabilityRule implements ValidationRule
 {
     public function __construct(
-        public ?string $day,
+        public ?WeekDay $day,
         public ?string $startTime,
         public ?string $endTime,
         public ?int $schoolYearId,
@@ -30,7 +31,7 @@ class TeacherAvailabilityRule implements ValidationRule
                 return $query->whereNot('id', $this->scheduleId);
             })
             ->where('school_year_id', $schoolYearId)
-            ->where('day_of_week', (int)$this->day)
+            ->where('day_of_week', $this->day->value)
             ->where(function ($query) {
                 $query->whereBetween('start_time', [$this->startTime, $this->endTime])
                     ->orWhereBetween('end_time', [$this->startTime, $this->endTime])

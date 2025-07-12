@@ -32,12 +32,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use UnitEnum;
 
 class ScheduleResource extends Resource
 {
@@ -45,7 +47,9 @@ class ScheduleResource extends Resource
 
     protected static ?string $slug = 'schedules';
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = Heroicon::OutlinedCalendarDays;
+
+    protected static string | UnitEnum | null $navigationGroup = 'Classes';
 
     public static function canAccess(): bool
     {
@@ -62,45 +66,52 @@ class ScheduleResource extends Resource
                         ->default(fn() => SchoolYear::current()->first()->id)
                         ->preload()
                         ->required(),
-                    Select::make('subject_id')
-                        ->relationship('subject')
-                        ->getOptionLabelFromRecordUsing(fn (Subject $record) => "{$record->code} - {$record->name}")
-                        ->searchable(['code', 'name'])
-                        ->preload()
-                        ->required(),
-                    Select::make('teacher_id')
-                        ->rules(function (Get $get, ?Model $record) {
-                            return [
-                                new TeacherAvailabilityRule(
-                                    day: $get('day_of_week'),
-                                    startTime: $get('start_time'),
-                                    endTime: $get('end_time'),
-                                    schoolYearId: $get('school_year_id'),
-                                    scheduleId: $record?->getKey(),
-                                )
-                            ];
-                        })
-                        ->relationship('teacher', modifyQueryUsing: function (Builder $query) {
-                            return $query->where('role', Role::Teacher);
-                        })
-                        ->getOptionLabelFromRecordUsing(fn (User $record) => "{$record->department->name} - {$record->name}")
-                        ->preload()
-                        ->searchable(),
-                    Select::make('room_id')
-                        ->rules(function (Get $get, ?Model $record) {
-                            return [
-                                new RoomAvailabilityRule(
-                                    day: $get('day_of_week'),
-                                    startTime: $get('start_time'),
-                                    endTime: $get('end_time'),
-                                    schoolYearId: $get('school_year_id'),
-                                    scheduleId: $record?->getKey(),
-                                )
-                            ];
-                        })
-                        ->relationship('room', 'name')
-                        ->preload()
-                        ->searchable(),
+                    Grid::make()
+                        ->schema([
+                            Select::make('subject_id')
+                                ->relationship('subject')
+                                ->getOptionLabelFromRecordUsing(fn (Subject $record) => "{$record->code} - {$record->name}")
+                                ->searchable(['code', 'name'])
+                                ->preload()
+                                ->required(),
+                            Select::make('section_id')
+                                ->relationship('section', 'name')
+                                ->searchable()
+                                ->preload(),
+                            Select::make('teacher_id')
+                                ->rules(function (Get $get, ?Model $record) {
+                                    return [
+                                        new TeacherAvailabilityRule(
+                                            day: $get('day_of_week'),
+                                            startTime: $get('start_time'),
+                                            endTime: $get('end_time'),
+                                            schoolYearId: $get('school_year_id'),
+                                            scheduleId: $record?->getKey(),
+                                        )
+                                    ];
+                                })
+                                ->relationship('teacher', modifyQueryUsing: function (Builder $query) {
+                                    return $query->where('role', Role::Teacher);
+                                })
+                                ->getOptionLabelFromRecordUsing(fn (User $record) => "{$record->department->name} - {$record->name}")
+                                ->preload()
+                                ->searchable(),
+                            Select::make('room_id')
+                                ->rules(function (Get $get, ?Model $record) {
+                                    return [
+                                        new RoomAvailabilityRule(
+                                            day: $get('day_of_week'),
+                                            startTime: $get('start_time'),
+                                            endTime: $get('end_time'),
+                                            schoolYearId: $get('school_year_id'),
+                                            scheduleId: $record?->getKey(),
+                                        )
+                                    ];
+                                })
+                                ->relationship('room', 'name')
+                                ->preload()
+                                ->searchable(),
+                    ]),
                     Grid::make()
                         ->schema([
                             Select::make('day_of_week')
@@ -111,7 +122,7 @@ class ScheduleResource extends Resource
                             TimePicker::make('end_time')
                                 ->minutesStep(10),
                         ]),
-                ])
+                ])->columnSpanFull()
             ]);
     }
 
@@ -128,11 +139,12 @@ class ScheduleResource extends Resource
                 TextColumn::make('room.name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('day_of_week'),
+                TextColumn::make('day_of_week')
+                    ->formatStateUsing(fn(?WeekDay $state) => $state?->name),
                 TextColumn::make('start_time')
-                    ->date(),
+                    ->time('h:i A'),
                 TextColumn::make('end_time')
-                    ->date(),
+                    ->time('h:i A'),
             ])
             ->filters([
                 Filter::make('program')

@@ -19,6 +19,7 @@ class Schedule extends Model
         'start_time',
         'end_time',
         'school_year_id',
+        'section_id',
     ];
 
     protected function casts(): array
@@ -26,6 +27,18 @@ class Schedule extends Model
         return [
             'day_of_week' => WeekDay::class,
         ];
+    }
+
+    protected $appends = ['name'];
+
+    public function getNameAttribute(): string
+    {
+        return $this->subject->name . ' ' . $this->teacher?->name . ' ' . $this->room?->name;
+    }
+
+    public function section(): BelongsTo
+    {
+        return $this->belongsTo(Section::class);
     }
 
     public function subject(): BelongsTo
