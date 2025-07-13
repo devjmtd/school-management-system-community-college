@@ -29,6 +29,7 @@ class Student extends Model
         'image',
         'notes',
         'user_id',
+        'student_id',
     ];
 
     protected function casts(): array

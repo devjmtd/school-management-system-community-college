@@ -77,6 +77,7 @@ class ScheduleResource extends Resource
                             Select::make('section_id')
                                 ->relationship('section', 'name')
                                 ->searchable()
+                                ->nullable()
                                 ->preload(),
                             Select::make('teacher_id')
                                 ->rules(function (Get $get, ?Model $record) {

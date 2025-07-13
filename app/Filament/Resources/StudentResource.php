@@ -53,6 +53,10 @@ class StudentResource extends Resource
                                     ->required(),
                                 TextInput::make('last_name')
                                     ->required(),
+                                TextInput::make('student_id')
+                                    ->label('Student ID')
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(255),
                                 DatePicker::make('date_of_birth')
                                     ->required(),
                                 TextInput::make('place_of_birth')

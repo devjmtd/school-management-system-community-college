@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\Sections\RelationManagers;
+namespace App\Filament\Resources\Enrollments\RelationManagers;
 
 use App\Filament\Resources\ScheduleResource;
+use App\Filament\Tables\ScheduleTable;
 use App\Models\Schedule;
 use Filament\Actions\Action;
 use Filament\Actions\AssociateAction;
 use Filament\Actions\AttachAction;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DetachAction;
-use Filament\Actions\DissociateAction;
+use Filament\Forms\Components\ModalTableSelect;
 use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
@@ -24,10 +25,11 @@ class SchedulesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->filters([])
             ->headerActions([
-                AssociateAction::make()
-                    ->label('Link Existing Schedule')
+                AttachAction::make()
+                    ->multiple()
+                    ->label('Add Schedule')
+                    ->color('primary')
                     ->recordSelectSearchColumns(['subject.name', 'teacher.name', 'room.name'])
                     ->recordSelectOptionsQuery(function (Builder $query) {
                         return $query
@@ -42,12 +44,14 @@ class SchedulesRelationManager extends RelationManager
                             ($record->start_time ? ' | ' . $record->start_time : '') .
                             ($record->end_time ? ' - ' . $record->end_time : '');
                     })
+                    ->modalHeading('Add Schedule')
+                    ->modalSubmitActionLabel('Add')
                     ->preloadRecordSelect(),
-                CreateAction::make(),
-            ])
-            ->recordActions([
-                DissociateAction::make('removeSchedule')
+//                CreateAction::make(),
+            ])->recordActions([
+                DetachAction::make()
                     ->label('Remove Schedule')
+                    ->modalHeading('Remove Schedule')
                     ->modalSubmitActionLabel('Remove'),
             ]);
     }

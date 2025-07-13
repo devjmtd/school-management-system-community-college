@@ -6,6 +6,7 @@ use App\QueryBuilders\ScheduleQuery;
 use Carbon\WeekDay;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Schedule extends Model
 {
@@ -59,5 +60,10 @@ class Schedule extends Model
     public function schoolYear(): BelongsTo
     {
         return $this->belongsTo(SchoolYear::class);
+    }
+
+    public function enrollments(): BelongsToMany
+    {
+        return $this->belongsToMany(Enrollment::class);
     }
 }
