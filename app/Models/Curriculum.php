@@ -20,7 +20,8 @@ class Curriculum extends Model
     public function subjects(): BelongsToMany
     {
         return $this->belongsToMany(Subject::class)
-            ->using(CurriculumSubject::class);
+            ->using(CurriculumSubject::class)
+            ->withPivot('year_level');
     }
 
     public function curriculumSubjects(): HasMany

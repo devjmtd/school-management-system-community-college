@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\StudentResource\Pages\GradesPage;
+use App\Filament\Resources\StudentResource\RelationManagers\StudentProgramsRelationManager;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -19,7 +21,6 @@ use App\Models\Student;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
@@ -143,12 +144,20 @@ class StudentResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            StudentProgramsRelationManager::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListStudents::route('/'),
             'create' => CreateStudent::route('/create'),
             'edit' => EditStudent::route('/{record}/edit'),
+            'grades' => GradesPage::route('/{record}/grades'),
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Student extends Model
 {
@@ -39,5 +40,15 @@ class Student extends Model
             'others' => 'array',
             'admission_checklist' => 'array',
         ];
+    }
+
+    public function grades(): HasMany
+    {
+        return $this->hasMany(Grade::class);
+    }
+
+    public function studentPrograms(): HasMany
+    {
+        return $this->hasMany(StudentProgram::class);
     }
 }
