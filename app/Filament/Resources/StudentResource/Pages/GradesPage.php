@@ -68,15 +68,35 @@ class GradesPage extends Page implements  HasTable, HasSchemas
                     Split::make([
                         TextInputColumn::make('prelims')
                             ->type('number')
+                            ->step(0.25)
+                            ->default(0.0)
+                            ->rules([
+                                'max:5',
+                            ])
                             ->placeholder('Prelims'),
-                        TextInputColumn::make('midterms')
+                        TextInputColumn::make('midterm')
                             ->type('number')
+                            ->step(0.25)
+                            ->default(0.0)
+                            ->rules([
+                                'max:5',
+                            ])
                             ->placeholder('Midterms'),
                         TextInputColumn::make('pre_finals')
                             ->type('number')
+                            ->step(0.25)
+                            ->default(0.0)
+                            ->rules([
+                                'max:5',
+                            ])
                             ->placeholder('Pre-Finals'),
                         TextInputColumn::make('finals')
                             ->type('number')
+                            ->step(0.25)
+                            ->default(0.0)
+                            ->rules([
+                                'max:5',
+                            ])
                             ->placeholder('Finals'),
                     ])
                 ])->collapsible(true)
