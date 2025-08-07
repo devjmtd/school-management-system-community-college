@@ -67,6 +67,7 @@ class TeacherResource extends Resource
                             ->required(),
                         TextInput::make('password')
                             ->visibleOn('create')
+                            ->password()
                             ->required(),
                         Select::make('department_id')
                             ->relationship('department', 'name', modifyQueryUsing: function (Builder $query) use ($departmentIds) {

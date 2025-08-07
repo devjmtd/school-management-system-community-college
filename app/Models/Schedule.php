@@ -7,9 +7,12 @@ use Carbon\WeekDay;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class Schedule extends Model
 {
+    use HasRelationships;
+
     protected static string $builder = ScheduleQuery::class;
 
     protected $fillable = [
@@ -64,6 +67,25 @@ class Schedule extends Model
 
     public function enrollments(): BelongsToMany
     {
-        return $this->belongsToMany(Enrollment::class);
+        return $this->belongsToMany(Enrollment::class)
+            ->using(EnrollmentSchedule::class);
+    }
+
+    public function students()
+    {
+        return $this->hasManyDeep(
+            \App\Models\Student::class,
+            ['enrollment_schedule', \App\Models\Enrollment::class],
+            [
+                'schedule_id',   // FK on enrollment_schedule
+                'id',            // FK on enrollments
+                'id'             // FK on students
+            ],
+            [
+                'id',            // schedule PK
+                'enrollment_id', // PK on enrollment_schedule
+                'student_id'     // FK on enrollments
+            ]
+        );
     }
 }

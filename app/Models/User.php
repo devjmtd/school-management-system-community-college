@@ -60,6 +60,10 @@ class User extends Authenticatable implements FilamentUser
             return $this->role === Role::Admin || $this->role === Role::ProgramHead || $this->role === Role::Registrar;
         }
 
+        if ($panel->getId() === 'teacher-portal') {
+            return $this->role === Role::Teacher;
+        }
+
         return false;
     }
 

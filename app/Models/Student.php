@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class Student extends Model
 {
+    use HasRelationships;
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -50,5 +53,28 @@ class Student extends Model
     public function studentPrograms(): HasMany
     {
         return $this->hasMany(StudentProgram::class);
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function schedules()
+    {
+        return $this->hasManyDeep(
+            Schedule::class,
+            ['enrollments', 'enrollment_schedule'],
+            [
+                'student_id',
+                'enrollment_id',
+                'id',
+            ],
+            [
+                'id',
+                'id',
+                'id',
+            ]
+        );
     }
 }
