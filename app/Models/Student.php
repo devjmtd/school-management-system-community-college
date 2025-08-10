@@ -36,6 +36,13 @@ class Student extends Model
         'student_id',
     ];
 
+    protected $appends = ['full_name'];
+
+    public function getFullNameAttribute(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     protected function casts(): array
     {
         return [

@@ -31,6 +31,7 @@ class TeacherPortalPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/TeacherPortal/Resources'), for: 'App\Filament\TeacherPortal\Resources')
             ->discoverPages(in: app_path('Filament/TeacherPortal/Pages'), for: 'App\Filament\TeacherPortal\Pages')
             ->pages([

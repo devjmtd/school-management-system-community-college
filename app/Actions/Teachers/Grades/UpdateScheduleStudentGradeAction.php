@@ -12,17 +12,19 @@ class UpdateScheduleStudentGradeAction
 {
     public static function execute(UpdateScheduleStudentGradeData $data): void
     {
-        $grade  = Grade::where('student_id', $data->studentId)
-            ->where('subject_id', $data->subjectId)
-            ->firstOrFail();
+        \DB::transaction(function () use ($data) {
+            $grade = Grade::where('student_id', $data->studentId)
+                ->where('subject_id', $data->subjectId)
+                ->firstOrFail();
 
-        $grade->update([
-            'prelims' => $data->prelimsGrade,
-            'midterm' => $data->midtermsGrade,
-            'pre_finals' => $data->preFinalsGrade,
-            'finals' => $data->finalsGrade,
-            'schedule_id' => $data->scheduleId,
-            'remarks' => $data->remarks,
-        ]);
+            $grade->update([
+                'prelims' => $data->prelimsGrade,
+                'midterm' => $data->midtermsGrade,
+                'pre_finals' => $data->preFinalsGrade,
+                'finals' => $data->finalsGrade,
+                'schedule_id' => $data->scheduleId,
+                'remarks' => $data->remarks,
+            ]);
+        });
     }
 }
