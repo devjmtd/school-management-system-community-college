@@ -20,9 +20,11 @@ class GradeChangeRequestResource extends Resource
 {
     protected static ?string $model = GradeChangeRequest::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
 
     protected static ?string $recordTitleAttribute = 'grade.student.full_name';
+
+    protected static string | \UnitEnum | null $navigationGroup = 'Academic Records';
 
     public static function form(Schema $schema): Schema
     {
