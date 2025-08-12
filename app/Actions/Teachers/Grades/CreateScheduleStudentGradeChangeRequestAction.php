@@ -25,6 +25,7 @@ class CreateScheduleStudentGradeChangeRequestAction
                 'grade_id' => $grade->id,
                 'reason' => $data->remarks,
                 'status' => RequestStatus::Pending,
+                'average' => $data->average,
                 'finals' => $data->finalsGrade,
                 'pre_finals' => $data->preFinalsGrade,
                 'midterm' => $data->midtermsGrade,

@@ -28,6 +28,7 @@ class ActionGradeChangeRequestAction
                 'pre_finals' => $request->pre_finals,
                 'midterm' => $request->midterm,
                 'prelims' => $request->prelims,
+                'average' => $request->average,
             ]);
         }
 

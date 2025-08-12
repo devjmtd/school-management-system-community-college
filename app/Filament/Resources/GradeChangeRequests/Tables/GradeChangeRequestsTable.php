@@ -13,6 +13,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -37,25 +38,30 @@ class GradeChangeRequestsTable
             ->recordActions([
                 ViewAction::make()
                     ->schema([
-                        TextEntry::make('requestedBy.name')
-                            ->label('Requested By'),
-                        TextEntry::make('grade.student.full_name')
-                            ->label('Student'),
-                        TextEntry::make('grade.subject.name')
-                            ->label('Subject'),
-                        TextEntry::make('grade.subject.code')
-                            ->label('Subject Code'),
-                        TextEntry::make('prelims')
-                            ->label('Prelims'),
-                        TextEntry::make('midterm')
-                            ->label('Midterm'),
-                        TextEntry::make('pre_finals')
-                            ->label('Pre Finals'),
-                        TextEntry::make('finals')
-                            ->label('Finals'),
-                        TextEntry::make('reason'),
-                        TextEntry::make('status')
-                            ->label('Status'),
+                        Grid::make()
+                            ->schema([
+                                TextEntry::make('requestedBy.name')
+                                    ->label('Requested By'),
+                                TextEntry::make('grade.student.full_name')
+                                    ->label('Student'),
+                                TextEntry::make('grade.subject.name')
+                                    ->label('Subject'),
+                                TextEntry::make('grade.subject.code')
+                                    ->label('Subject Code'),
+                                TextEntry::make('prelims')
+                                    ->label('Prelims'),
+                                TextEntry::make('midterm')
+                                    ->label('Midterm'),
+                                TextEntry::make('pre_finals')
+                                    ->label('Pre Finals'),
+                                TextEntry::make('finals')
+                                    ->label('Finals'),
+                                TextEntry::make('average')
+                                    ->label('Average'),
+                                TextEntry::make('reason'),
+                                TextEntry::make('status')
+                                    ->label('Status'),
+                            ]),
                     ]),
                 ActionGroup::make([
                     Action::make('approveRequest')

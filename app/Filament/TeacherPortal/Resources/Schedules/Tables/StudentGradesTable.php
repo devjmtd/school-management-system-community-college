@@ -40,6 +40,9 @@ class StudentGradesTable
                 TextColumn::make('finals_grade')
                     ->default(0.0)
                     ->label('Finals'),
+                TextColumn::make('average')
+                    ->default(0.0)
+                    ->label('Average'),
             ])
             ->recordActions([
                 Action::make('edit')
@@ -52,6 +55,7 @@ class StudentGradesTable
                             'midterms_grade' => $record->midterms_grade,
                             'pre_finals_grade' => $record->pre_finals_grade,
                             'finals_grade' => $record->finals_grade,
+                            'average' => $record->average,
                             'remarks' => $record->remarks,
                         ];
                     })
@@ -93,6 +97,15 @@ class StudentGradesTable
                                 'max:5',
                             ])
                             ->label('Finals'),
+                        TextInput::make('average')
+                            ->maxValue(5)
+                            ->default(0.0)
+                            ->numeric()
+                            ->step(0.25)
+                            ->rules([
+                                'max:5',
+                            ])
+                            ->label('Average'),
                         Textarea::make('remarks')
                             ->maxLength(1000),
                     ])
@@ -104,6 +117,7 @@ class StudentGradesTable
                             midtermsGrade: data_get($data, 'midterms_grade'),
                             preFinalsGrade: data_get($data, 'pre_finals_grade'),
                             finalsGrade: data_get($data, 'finals_grade'),
+                            average: data_get($data, 'average'),
                             scheduleId: $record->schedule_id,
                             remarks: data_get($data, 'remarks'),
                         ));
@@ -127,6 +141,7 @@ class StudentGradesTable
                             'midterms_grade' => $record->midterms_grade,
                             'pre_finals_grade' => $record->pre_finals_grade,
                             'finals_grade' => $record->finals_grade,
+                            'average' => $record->average,
                             'remarks' => $record->remarks,
                         ];
                     })
@@ -168,6 +183,15 @@ class StudentGradesTable
                                 'max:5',
                             ])
                             ->label('Finals'),
+                        TextInput::make('average')
+                            ->maxValue(5)
+                            ->default(0.0)
+                            ->numeric()
+                            ->step(0.25)
+                            ->rules([
+                                'max:5',
+                            ])
+                            ->label('Average'),
                         Textarea::make('remarks')
                             ->maxLength(1000),
                     ])
@@ -179,6 +203,7 @@ class StudentGradesTable
                             midtermsGrade: data_get($data, 'midterms_grade'),
                             preFinalsGrade: data_get($data, 'pre_finals_grade'),
                             finalsGrade: data_get($data, 'finals_grade'),
+                            average: data_get($data, 'average'),
                             scheduleId: $record->schedule_id,
                             remarks: data_get($data, 'remarks'),
                         ));
@@ -190,7 +215,7 @@ class StudentGradesTable
                             ->send();
                     })
                     ->visible(function (EnrollmentSchedule $record) {
-                        return $record->schedule->school_year_id === SchoolYear::current()->first()->id;
+                        return $record->schedule->school_year_id !== SchoolYear::current()->first()->id;
                     })
             ]);
     }

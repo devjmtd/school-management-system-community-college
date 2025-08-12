@@ -13,6 +13,7 @@ class Grade extends Model
         'midterm',
         'pre_finals',
         'finals',
+        'average',
         'remarks',
         'student_id',
         'subject_id',

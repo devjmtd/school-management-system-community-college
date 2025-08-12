@@ -13,6 +13,7 @@ class CreateScheduleStudentGradeChangeRequestData
         public float $midtermsGrade,
         public float $preFinalsGrade,
         public float $finalsGrade,
+        public float $average,
         public int $scheduleId,
         public ?string $remarks,
     ) {}

@@ -16,12 +16,15 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ScheduleResource extends Resource
 {
     protected static ?string $model = Schedule::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
+
+    protected static string | UnitEnum | null $navigationGroup = 'Academic';
 
     public static function form(Schema $schema): Schema
     {

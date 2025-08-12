@@ -13,6 +13,7 @@ use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables\Columns\Layout\Panel;
 use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -69,7 +70,7 @@ class GradesPage extends Page implements  HasTable, HasSchemas
                         TextInputColumn::make('prelims')
                             ->type('number')
                             ->step(0.25)
-                            ->default(0.0)
+                            ->placeholder('Prelims')
                             ->rules([
                                 'max:5',
                             ])
@@ -77,7 +78,7 @@ class GradesPage extends Page implements  HasTable, HasSchemas
                         TextInputColumn::make('midterm')
                             ->type('number')
                             ->step(0.25)
-                            ->default(0.0)
+                            ->placeholder('Midterms')
                             ->rules([
                                 'max:5',
                             ])
@@ -85,7 +86,7 @@ class GradesPage extends Page implements  HasTable, HasSchemas
                         TextInputColumn::make('pre_finals')
                             ->type('number')
                             ->step(0.25)
-                            ->default(0.0)
+                            ->placeholder('Pre-Finals')
                             ->rules([
                                 'max:5',
                             ])
@@ -93,11 +94,18 @@ class GradesPage extends Page implements  HasTable, HasSchemas
                         TextInputColumn::make('finals')
                             ->type('number')
                             ->step(0.25)
-                            ->default(0.0)
+                            ->placeholder('Finals')
                             ->rules([
                                 'max:5',
                             ])
                             ->placeholder('Finals'),
+                        TextInputColumn::make('average')
+                            ->type('number')
+                            ->step(0.25)
+                            ->rules([
+                                'max:5',
+                            ])
+                            ->placeholder('Average'),
                     ])
                 ])->collapsible(true)
             ])

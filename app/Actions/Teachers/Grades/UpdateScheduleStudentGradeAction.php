@@ -22,6 +22,7 @@ class UpdateScheduleStudentGradeAction
                 'midterm' => $data->midtermsGrade,
                 'pre_finals' => $data->preFinalsGrade,
                 'finals' => $data->finalsGrade,
+                'average' => $data->average,
                 'schedule_id' => $data->scheduleId,
                 'remarks' => $data->remarks,
             ]);

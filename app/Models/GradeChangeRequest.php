@@ -13,6 +13,7 @@ class GradeChangeRequest extends Model
         'midterm',
         'pre_finals',
         'finals',
+        'average',
         'grade_id',
         'requested_by',
         'reason',

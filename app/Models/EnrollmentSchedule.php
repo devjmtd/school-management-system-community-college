@@ -15,6 +15,7 @@ class EnrollmentSchedule extends Pivot
         'midterms_grade',
         'pre_finals_grade',
         'finals_grade',
+        'average',
         'remarks',
     ];
 
@@ -48,6 +49,15 @@ class EnrollmentSchedule extends Pivot
             ->first();
 
         return $grade?->pre_finals;
+    }
+
+    public function getAverageAttribute(): float|string|null
+    {
+        $grade = Grade::where('student_id', $this->enrollment->student_id)
+            ->where('schedule_id', $this->schedule_id)
+            ->first();
+
+        return $grade?->average;
     }
 
     public function getRemarksAttribute(): string|null
