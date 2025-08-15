@@ -26,7 +26,9 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -98,7 +100,10 @@ class StudentResource extends Resource
                         Tab::make('Contact Information')
                             ->schema([
                                 TextInput::make('phone_number'),
-                                TextInput::make('email'),
+                                TextInput::make('email')
+                                    ->email()
+                                    ->unique(ignoreRecord: true)
+                                    ->required(),
                             ]),
                         Tab::make('Admission Checklist')
                             ->schema([
@@ -128,10 +133,36 @@ class StudentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('first_name')
-                    ->searchable(),
-                TextColumn::make('last_name')
-                    ->searchable(),
+                Stack::make([
+                    TextColumn::make('full_name')
+                        ->weight(FontWeight::Bold)
+                        ->searchable(['first_name', 'last_name']),
+                    Stack::make([
+                        TextColumn::make('student_id')
+                            ->label('Student ID')
+                            ->icon('heroicon-s-identification')
+                            ->sortable()
+                            ->searchable(),
+                    ])->visible(fn($record): bool => filled($record->student_id)),
+                    Stack::make([
+                        TextColumn::make('email')
+                            ->icon('heroicon-o-envelope')
+                            ->searchable()
+                            ->sortable()
+                            ->label('Email')
+                            ->color('gray')
+                            ->limit(20)
+                    ])->visible(fn($record): bool => filled($record->email)),
+                    Stack::make([
+                        TextColumn::make('phone_number')
+                            ->icon('heroicon-o-phone')
+                            ->searchable()
+                            ->sortable()
+                            ->label('Phone Number')
+                            ->color('gray')
+                            ->limit(20)
+                    ])->visible(fn($record): bool => filled($record->phone_number)),
+                ]),
             ])
             ->filters([
                 //
@@ -139,11 +170,17 @@ class StudentResource extends Resource
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
+            ])->contentGrid([
+                'sm'  => 1,
+                'md'  => 2,
+                'xl'  => 3,
+                '2xl' => 4,
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+            ->paginated([
+                16,
+                32,
+                64,
+                'all',
             ]);
     }
 

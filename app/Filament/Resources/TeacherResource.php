@@ -17,9 +17,12 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -84,19 +87,42 @@ class TeacherResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('email')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('department.name')
-                    ->searchable()
-                    ->sortable(),
+                Stack::make([
+                    TextColumn::make('name')
+                        ->weight(FontWeight::Bold)
+                        ->searchable()
+                        ->sortable(),
+                    TextColumn::make('email')
+                        ->limit(30)
+                        ->color('gray')
+                        ->icon(Heroicon::Envelope)
+                        ->searchable()
+                        ->sortable(),
+                    TextColumn::make('department.name')
+                        ->limit(30)
+                        ->icon(Heroicon::Briefcase)
+                        ->searchable()
+                        ->sortable(),
+                ]),
             ])
-            ->modifyQueryUsing(fn(Builder $query): Builder => $query->where('role', Role::Teacher))
+            ->modifyQueryUsing(fn(Builder $query): Builder => $query
+                ->where('role', Role::Teacher)
+                ->when(auth()->user()->role == Role::Admin, fn(Builder $query) => $query->with('department'))
+                ->when(auth()->user()->role == Role::ProgramHead, fn(Builder $query) => $query->where('department_id', auth()->user()->department_id))
+            )
             ->recordActions([
                 EditAction::make(),
+            ])->contentGrid([
+                'sm'  => 1,
+                'md'  => 2,
+                'xl'  => 3,
+                '2xl' => 4,
+            ])
+            ->paginated([
+                16,
+                32,
+                64,
+                'all',
             ]);
     }
 

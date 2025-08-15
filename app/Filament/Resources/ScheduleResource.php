@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ScheduleResource\RelationManagers\StudentsRelationManager;
+use Carbon\Carbon;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -33,7 +34,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -132,21 +135,48 @@ class ScheduleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('subject.name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('teacher.name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('room.name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('day_of_week')
-                    ->formatStateUsing(fn(?WeekDay $state) => $state?->name),
-                TextColumn::make('start_time')
-                    ->time('h:i A'),
-                TextColumn::make('end_time')
-                    ->time('h:i A'),
+                Stack::make([
+                    TextColumn::make('subject.name')
+                        ->weight(FontWeight::Bold)
+                        ->icon(Heroicon::BookOpen)
+                        ->searchable()
+                        ->sortable(),
+                    Stack::make([
+                        TextColumn::make('teacher.name')
+                            ->limit(30)
+                            ->icon(Heroicon::User)
+                            ->searchable()
+                            ->sortable(),
+                    ])->visible(fn($record): bool => filled($record->teacher_id)),
+                    Stack::make([
+                        TextColumn::make('section.name')
+                            ->limit(30)
+                            ->icon(Heroicon::Users)
+                            ->searchable()
+                            ->sortable(),
+                    ])->visible(fn($record): bool => filled($record->section_id)),
+                    Stack::make([
+                        TextColumn::make('room.name')
+                            ->limit(30)
+                            ->icon(Heroicon::BuildingLibrary)
+                            ->searchable()
+                            ->sortable(),
+                    ])->visible(fn($record): bool => filled($record->room_id)),
+                    Stack::make([
+                        TextColumn::make('day_of_week')
+                            ->icon(Heroicon::CalendarDays)
+                            ->formatStateUsing(fn($record): string =>$record->day_of_week->name)
+                            ->searchable()
+                            ->sortable(),
+                    ])->visible(fn($record): bool => filled($record->day_of_week)),
+                    Stack::make([
+                        TextColumn::make('start_time')
+                            ->icon(Heroicon::Clock)
+                            ->formatStateUsing(fn($record): string => Carbon::parse($record->start_time)->format('h:i A') ."-". Carbon::parse($record->end_time)->format('h:i A'))
+                            ->searchable()
+                            ->sortable(),
+                    ])->visible(fn($record): bool => filled($record->start_time)),
+                ]),
             ])
             ->filters([
                 Filter::make('program')
@@ -220,11 +250,17 @@ class ScheduleResource extends Resource
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
+            ])->contentGrid([
+                'sm'  => 1,
+                'md'  => 2,
+                'xl'  => 3,
+                '2xl' => 4,
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+            ->paginated([
+                16,
+                32,
+                64,
+                'all',
             ]);
     }
 

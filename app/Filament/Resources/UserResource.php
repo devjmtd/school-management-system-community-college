@@ -6,6 +6,8 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\BulkActionGroup;
@@ -70,21 +72,47 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('email'),
-                TextColumn::make('role'),
-                TextColumn::make('department.name'),
+                Tables\Columns\Layout\Stack::make([
+                    TextColumn::make('name')
+                        ->weight(FontWeight::Bold)
+                        ->searchable()
+                        ->sortable(),
+                    TextColumn::make('email')
+                        ->limit(30)
+                        ->color('gray')
+                        ->icon(Heroicon::Envelope)
+                        ->searchable()
+                        ->sortable(),
+                    TextColumn::make('role')
+                        ->icon(Heroicon::Briefcase)
+                        ->searchable()
+                        ->sortable(),
+                    TextColumn::make('department.name')
+                        ->limit(30)
+                        ->icon(Heroicon::BuildingLibrary)
+                        ->searchable()
+                        ->sortable(),
+                ])
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('role')
+                    ->options(Role::class),
             ])
+            ->modifyQueryUsing(fn(Builder $query): Builder => $query->where('role', '!=', Role::Student))
+            ->deferFilters(false)
             ->recordActions([
                 EditAction::make(),
+            ])->contentGrid([
+                'sm'  => 1,
+                'md'  => 2,
+                'xl'  => 3,
+                '2xl' => 4,
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+            ->paginated([
+                16,
+                32,
+                64,
+                'all',
             ]);
     }
 
