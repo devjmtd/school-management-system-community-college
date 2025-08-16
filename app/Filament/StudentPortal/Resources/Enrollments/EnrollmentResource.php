@@ -23,7 +23,7 @@ class EnrollmentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
 
-    protected static ?string $label = 'Enrollment';
+    protected static ?string $label = 'Your Enrollment';
 
     protected static ?string $recordTitleAttribute = 'program.name';
 

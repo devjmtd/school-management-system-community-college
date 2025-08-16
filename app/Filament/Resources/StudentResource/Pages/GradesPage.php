@@ -55,7 +55,10 @@ class GradesPage extends Page implements  HasTable, HasSchemas
     {
         return $table
             ->query(Grade::query())
-            ->modifyQueryUsing(fn(Builder $query): Builder => $query->where('program_id', $this->record->program_id))
+            ->modifyQueryUsing(fn(Builder $query): Builder => $query
+                ->where('program_id', $this->record->program_id)
+                ->where('student_id', $this->record->student_id)
+            )
             ->paginated(false)
             ->columns([
                 Split::make([
