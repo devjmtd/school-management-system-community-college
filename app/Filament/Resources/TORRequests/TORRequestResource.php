@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\TORRequests;
 
+use App\Enums\PrintRequestStatus;
+use App\Enums\Role;
 use App\Filament\Resources\TORRequests\Pages\CreateTORRequest;
 use App\Filament\Resources\TORRequests\Pages\EditTORRequest;
 use App\Filament\Resources\TORRequests\Pages\ListTORRequests;
@@ -28,6 +30,16 @@ class TORRequestResource extends Resource
     protected static ?string $label = 'TOR Requests';
 
     protected static string | UnitEnum | null $navigationGroup = 'Requests';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', PrintRequestStatus::Requested)->count();
+    }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->role === Role::Admin || auth()->user()->role === Role::Registrar;
+    }
 
     public static function form(Schema $schema): Schema
     {
