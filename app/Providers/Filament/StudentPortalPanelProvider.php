@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Auth\Pages\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,9 +27,11 @@ class StudentPortalPanelProvider extends PanelProvider
         return $panel
             ->id('student-portal')
             ->path('student-portal')
+            ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/StudentPortal/Resources'), for: 'App\Filament\StudentPortal\Resources')
             ->discoverPages(in: app_path('Filament/StudentPortal/Pages'), for: 'App\Filament\StudentPortal\Pages')
             ->pages([

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Enrollments;
 
+use App\Enums\Role;
 use App\Filament\Resources\Enrollments\Pages\CreateEnrollment;
 use App\Filament\Resources\Enrollments\Pages\EditEnrollment;
 use App\Filament\Resources\Enrollments\Pages\ListEnrollments;
@@ -23,6 +24,11 @@ class EnrollmentResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserPlus;
 
     protected static string | \UnitEnum | null $navigationGroup = 'Academic Records';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->role === Role::Admin || auth()->user()->role === Role::Registrar;
+    }
 
     public static function form(Schema $schema): Schema
     {

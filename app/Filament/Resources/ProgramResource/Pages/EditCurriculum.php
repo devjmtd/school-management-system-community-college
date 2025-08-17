@@ -126,23 +126,6 @@ class EditCurriculum extends Page implements HasTable
                     }),
             ])
             ->recordActions([
-                ViewAction::make('view')
-                    ->schema([
-                        TextEntry::make('name'),
-                        TextEntry::make('code'),
-                        TextEntry::make('units'),
-                        TextEntry::make('description'),
-                    ]),
-                EditAction::make('edit')
-                    ->schema([
-                        Select::make('semester')
-                            ->options(Semester::class)
-                            ->required(),
-                        Select::make('year_level')
-                            ->options(YearLevel::class)
-                            ->required(),
-                    ])
-                    ->icon('heroicon-s-pencil-square'),
                 Action::make('remove')
                     ->color('danger')
                     ->icon('heroicon-s-trash')

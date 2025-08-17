@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\GradeChangeRequests;
 
+use App\Enums\Role;
 use App\Filament\Resources\GradeChangeRequests\Pages\CreateGradeChangeRequest;
 use App\Filament\Resources\GradeChangeRequests\Pages\EditGradeChangeRequest;
 use App\Filament\Resources\GradeChangeRequests\Pages\ListGradeChangeRequests;
@@ -25,6 +26,11 @@ class GradeChangeRequestResource extends Resource
     protected static ?string $recordTitleAttribute = 'grade.student.full_name';
 
     protected static string | \UnitEnum | null $navigationGroup = 'Academic Records';
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->role === Role::Admin || auth()->user()->role === Role::Registrar;
+    }
 
     public static function form(Schema $schema): Schema
     {
