@@ -19,6 +19,9 @@ class CreateNewSubjectAction
             'name' => $data->name,
             'code' => $data->code,
             'units' => $data->units,
+            'lab_units' => $data->labUnits,
+            'computer_lab_units' => $data->computerLabUnits,
+            'nstp_units' => $data->nstpUnits,
             'description' => $data->description,
         ]);
 

@@ -36,6 +36,10 @@ class Student extends Model
         'notes',
         'user_id',
         'student_id',
+        'middle_name',
+        'special_order_no',
+        'nstp_serial_no',
+        'learner_reference_no',
     ];
 
     protected $appends = ['full_name'];

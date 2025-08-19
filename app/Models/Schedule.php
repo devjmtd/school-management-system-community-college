@@ -33,11 +33,55 @@ class Schedule extends Model
         ];
     }
 
-    protected $appends = ['name'];
+    protected $appends = [
+        'name',
+        'academic_units',
+        'lab_units',
+        'computer_lab_units',
+        'nstp_units',
+        'tuition_fee',
+        'non_nstp_tuition_fee',
+        'nstp_tuition_fee',
+    ];
 
     public function getNameAttribute(): string
     {
         return $this->subject->name . ' ' . $this->teacher?->name . ' ' . $this->room?->name;
+    }
+
+    public function getAcademicUnitsAttribute(): int
+    {
+        return $this->subject->units;
+    }
+
+    public function getLabUnitsAttribute(): int
+    {
+        return $this->subject->lab_units;
+    }
+
+    public function getComputerLabUnitsAttribute(): int
+    {
+        return $this->subject->computer_lab_units;
+    }
+
+    public function getNstpUnitsAttribute(): int
+    {
+        return $this->subject->nstp_units;
+    }
+
+    public function getTuitionFeeAttribute(): float
+    {
+        return $this->subject->tuition_fee;
+    }
+
+    public function getNonNstpTuitionFeeAttribute(): float
+    {
+        return $this->subject->non_nstp_tuition_fee;
+    }
+
+    public function getNstpTuitionFeeAttribute(): float
+    {
+        return $this->subject->nstp_tuition_fee;
     }
 
     public function section(): BelongsTo

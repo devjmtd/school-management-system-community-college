@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Enrollments\Tables;
 
+use App\Models\SchoolYear;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -32,7 +33,11 @@ class EnrollmentsTable
             ->filters([
                 SelectFilter::make('program_id')
                     ->relationship('program', 'name'),
-                SelectFilter::make('year_level'),
+                SelectFilter::make('school_year_id')
+                    ->label('School Year')
+                    ->default(SchoolYear::current()->first()->id)
+                    ->searchable()
+                    ->options(SchoolYear::all()->pluck('name', 'id')),
             ])
             ->recordActions([
                 EditAction::make(),

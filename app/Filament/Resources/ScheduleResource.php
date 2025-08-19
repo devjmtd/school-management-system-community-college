@@ -37,6 +37,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -139,6 +140,12 @@ class ScheduleResource extends Resource
                     TextColumn::make('subject.name')
                         ->weight(FontWeight::Bold)
                         ->icon(Heroicon::BookOpen)
+                        ->searchable()
+                        ->sortable(),
+                    TextColumn::make('subject_units')
+                        ->weight(FontWeight::Bold)
+                        ->icon(Heroicon::BookOpen)
+                        ->formatStateUsing(fn ($state): string => "{$state} units")
                         ->searchable()
                         ->sortable(),
                     Stack::make([

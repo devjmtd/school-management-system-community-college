@@ -21,6 +21,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Pages\Page;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -61,7 +62,8 @@ class EditCurriculum extends Page implements HasTable
             ->columns([
                 TextColumn::make('subject.name'),
                 TextColumn::make('code'),
-                TextColumn::make('subject.units'),
+                TextColumn::make('subject.units')
+                    ->label('Academic Units'),
                 TextColumn::make('semester')
                     ->sortable(),
             ])
@@ -76,9 +78,23 @@ class EditCurriculum extends Page implements HasTable
                             ->required(),
                         TextInput::make('code')
                             ->required(),
-                        TextInput::make('units')
-                            ->integer()
-                            ->required(),
+                        Fieldset::make('Units')
+                            ->schema([
+                                TextInput::make('units')
+                                    ->label('Academic Units')
+                                    ->default(0)
+                                    ->integer()
+                                    ->required(),
+                                TextInput::make('lab_units')
+                                    ->default(0)
+                                    ->integer(),
+                                TextInput::make('computer_lab_units')
+                                    ->default(0)
+                                    ->integer(),
+                                TextInput::make('nstp_units')
+                                    ->default(0)
+                                    ->integer(),
+                            ])->columns(2),
                         Textarea::make('description'),
                         Select::make('semester')
                             ->options(Semester::class)
@@ -92,6 +108,9 @@ class EditCurriculum extends Page implements HasTable
                             name: data_get($data, 'name'),
                             code: data_get($data, 'code'),
                             units: data_get($data, 'units'),
+                            labUnits: data_get($data, 'lab_units'),
+                            computerLabUnits: data_get($data, 'computer_lab_units'),
+                            nstpUnits: data_get($data, 'nstp_units'),
                             description: data_get($data, 'description'),
                             semester: data_get($data, 'semester'),
                             yearLevel: data_get($data, 'year_level'),

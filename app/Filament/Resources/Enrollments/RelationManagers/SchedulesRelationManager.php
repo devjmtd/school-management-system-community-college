@@ -34,7 +34,7 @@ class SchedulesRelationManager extends RelationManager
                     ->recordSelectOptionsQuery(function (Builder $query) {
                         return $query
                             ->where('school_year_id', $this->getOwnerRecord()->getAttribute('school_year_id'))
-                            ->whereNotIn('id', $this->getOwnerRecord()->schedules()->pluck('id'));
+                            ->whereNotIn('subject_id', $this->getOwnerRecord()->schedules->pluck('id')->toArray());
                     })
                     ->recordTitle(function (Schedule $record) {
                         return ($record->subject->name) .

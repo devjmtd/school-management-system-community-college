@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StudentResource\Pages\GradesPage;
 use App\Filament\Resources\StudentResource\RelationManagers\StudentProgramsRelationManager;
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -57,6 +58,8 @@ class StudentResource extends Resource
                             ->schema([
                                 TextInput::make('first_name')
                                     ->required(),
+                                TextInput::make('middle_name')
+                                    ->maxLength(255),
                                 TextInput::make('last_name')
                                     ->required(),
                                 TextInput::make('student_id')
@@ -71,6 +74,21 @@ class StudentResource extends Resource
                                     ->maxLength(500),
                                 TextInput::make('provincial_address')
                                     ->maxLength(500),
+                                TextInput::make('citizenship')
+                                    ->maxLength(255),
+                                Select::make('gender')
+                                    ->options([
+                                        'Male' => 'Male',
+                                        'Female' => 'Female',
+                                    ]),
+                                TextInput::make('height')
+                                    ->numeric(),
+                                TextInput::make('weight')
+                                    ->numeric(),
+                                TextInput::make('blood_type')
+                                    ->maxLength(255),
+                                TextInput::make('religion')
+                                    ->maxLength(255),
                                 TextInput::make('citizenship')
                                     ->maxLength(255),
                                 FileUpload::make('image')
@@ -119,6 +137,9 @@ class StudentResource extends Resource
                             ]),
                         Tab::make('Other Information')
                             ->schema([
+                                TextInput::make('special_order_no'),
+                                TextInput::make('nstp_serial_no'),
+                                TextInput::make('learner_reference_no'),
                                 RichEditor::make('notes'),
                                 Placeholder::make('created_at')
                                     ->content(fn (?Student $record): string => $record ? $record->created_at->diffForHumans() : ''),

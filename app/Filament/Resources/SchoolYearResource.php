@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Actions\Action;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Actions\EditAction;
@@ -74,6 +75,9 @@ class SchoolYearResource extends Resource
                     ->boolean(),
             ])
             ->recordActions([
+                Action::make('billingReport')
+                    ->label('Billing Report')
+                    ->url(fn ($record): string => Pages\BillingReportsPage::getUrl(['record' => $record->getKey()])),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -90,6 +94,7 @@ class SchoolYearResource extends Resource
             'index' => ListSchoolYears::route('/'),
             'create' => CreateSchoolYear::route('/create'),
             'edit' => EditSchoolYear::route('/{record}/edit'),
+            'billing-reports' => Pages\BillingReportsPage::route('/{record}/billing-reports'),
         ];
     }
 

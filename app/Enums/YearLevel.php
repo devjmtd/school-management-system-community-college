@@ -25,4 +25,15 @@ enum YearLevel: int implements HasLabel
             self::Fifth => 'Fifth Year',
         };
     }
+
+    public function getShortLabel(): ?string
+    {
+        return match ($this) {
+            self::First => '1st',
+            self::Second => '2nd',
+            self::Third => '3rd',
+            self::Fourth => '4th',
+            self::Fifth => '5th',
+        };
+    }
 }

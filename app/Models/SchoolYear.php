@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\QueryBuilders\SchoolYearQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SchoolYear extends Model
 {
@@ -28,5 +29,10 @@ class SchoolYear extends Model
     public function getIsCurrentAttribute(): bool
     {
         return now()->between($this->start_date, $this->end_date);
+    }
+
+    public function enrollments(): HasMany
+    {
+        return $this->hasMany(Enrollment::class);
     }
 }
