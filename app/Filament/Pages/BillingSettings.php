@@ -62,6 +62,12 @@ class BillingSettings extends SettingsPage
                         TextInput::make('nstp_fee_per_unit')
                             ->label('NSTP Fee per Unit')
                             ->numeric(),
+                        TextInput::make('alco_mem_fees')
+                            ->label('ALCO Membership Fees')
+                            ->numeric(),
+                        TextInput::make('pta_fees')
+                            ->label('PTA')
+                            ->numeric(),
                         TextInput::make('other_fees')
                             ->numeric(),
                     ])->columnSpanFull(),

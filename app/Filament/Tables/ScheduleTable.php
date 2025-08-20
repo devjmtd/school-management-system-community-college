@@ -19,12 +19,20 @@ class ScheduleTable
             ->columns([
                 TextColumn::make('subject.name')
                     ->numeric()
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('subject.code')
+                    ->label('Code')
+                    ->numeric()
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('teacher.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('room.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('day_of_week'),
                 TextColumn::make('start_time')
@@ -35,6 +43,7 @@ class ScheduleTable
                     ->sortable(),
                 TextColumn::make('section.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
             ])
             ->filters([

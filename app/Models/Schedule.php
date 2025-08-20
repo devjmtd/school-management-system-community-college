@@ -39,9 +39,9 @@ class Schedule extends Model
         'lab_units',
         'computer_lab_units',
         'nstp_units',
-        'tuition_fee',
-        'non_nstp_tuition_fee',
-        'nstp_tuition_fee',
+        'start_time_formatted',
+        'end_time_formatted',
+        'day_of_week_name',
     ];
 
     public function getNameAttribute(): string
@@ -51,7 +51,7 @@ class Schedule extends Model
 
     public function getAcademicUnitsAttribute(): int
     {
-        return $this->subject->units;
+        return $this->subject->nstp_units > 0 ? 0 : $this->subject->units;
     }
 
     public function getLabUnitsAttribute(): int
@@ -69,19 +69,35 @@ class Schedule extends Model
         return $this->subject->nstp_units;
     }
 
-    public function getTuitionFeeAttribute(): float
+    public function getStartTimeFormattedAttribute(): string
     {
-        return $this->subject->tuition_fee;
+        if ($this->start_time === null) {
+            return '';
+        }
+
+        $startTime = \DateTime::createFromFormat('H:i:s', $this->start_time);
+
+        return $startTime->format('h:i A');
     }
 
-    public function getNonNstpTuitionFeeAttribute(): float
+    public function getEndTimeFormattedAttribute(): string
     {
-        return $this->subject->non_nstp_tuition_fee;
+        if ($this->end_time === null) {
+            return '';
+        }
+
+        $endTime = \DateTime::createFromFormat('H:i:s', $this->end_time);
+
+        return $endTime->format('h:i A');
     }
 
-    public function getNstpTuitionFeeAttribute(): float
+    public function getDayOfWeekNameAttribute(): string
     {
-        return $this->subject->nstp_tuition_fee;
+        if ($this->day_of_week === null) {
+            return '';
+        }
+
+        return $this->day_of_week->name;
     }
 
     public function section(): BelongsTo

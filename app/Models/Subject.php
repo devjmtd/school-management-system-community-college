@@ -33,7 +33,7 @@ class Subject extends Model
 
     public function getTuitionFeeAttribute(): ?float
     {
-        return $this->nstp_units ?? $this->non_nstp_tuition_fee;
+        return $this->nstp_units > 0 ? $this->nstp_tuition_fee : $this->non_nstp_tuition_fee;
     }
 
     public function getNonNstpTuitionFeeAttribute(): ?float

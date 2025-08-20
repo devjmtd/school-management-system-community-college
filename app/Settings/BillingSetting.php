@@ -21,6 +21,8 @@ class BillingSetting extends Settings
     public ?float $development_fees = null;
     public ?float $tuition_fee_per_unit = null;
     public ?float $nstp_fee_per_unit = null;
+    public ?float $alco_mem_fees = null;
+    public ?float $pta_fees = null;
     public ?float $other_fees = null;
 
     public static function group(): string
