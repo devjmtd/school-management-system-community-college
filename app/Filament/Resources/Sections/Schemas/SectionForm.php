@@ -28,7 +28,8 @@ class SectionForm
                         Select::make('program_id')
                             ->searchable()
                             ->preload()
-                            ->relationship('program', 'name'),
+                            ->relationship('program', 'name')
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' - ' . $record->major),
                 ])
             ]);
     }

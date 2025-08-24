@@ -6,6 +6,7 @@ use App\Enums\Role;
 use App\Filament\Resources\Enrollments\Pages\CreateEnrollment;
 use App\Filament\Resources\Enrollments\Pages\EditEnrollment;
 use App\Filament\Resources\Enrollments\Pages\ListEnrollments;
+use App\Filament\Resources\Enrollments\RelationManagers\OldSchedulesRelationManager;
 use App\Filament\Resources\Enrollments\RelationManagers\SchedulesRelationManager;
 use App\Filament\Resources\Enrollments\Schemas\EnrollmentForm;
 use App\Filament\Resources\Enrollments\Tables\EnrollmentsTable;
@@ -15,7 +16,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class EnrollmentResource extends Resource
 {
@@ -43,7 +43,8 @@ class EnrollmentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            SchedulesRelationManager::class,
+            OldSchedulesRelationManager::class,
+//            SchedulesRelationManager::class,
         ];
     }
 

@@ -222,7 +222,7 @@ class Enrollment extends Model
 
     public function schedules(): BelongsToMany
     {
-        return $this->belongsToMany(Schedule::class, 'enrollment_schedule')
-            ->using(EnrollmentSchedule::class);
+        return $this->belongsToMany(Schedule::class, 'enrollment_schedule');
+//            ->using(EnrollmentSchedule::class);
     }
 }

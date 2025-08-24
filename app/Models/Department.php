@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Department extends Model
 {
@@ -21,5 +22,12 @@ class Department extends Model
     public function programs(): HasMany
     {
         return $this->hasMany(Program::class);
+    }
+
+    public function programHead(): Department|HasOne
+    {
+//        dd(User::where('department_id', $this->id)->where('role', Role::ProgramHead)->first());
+        return $this->hasOne(User::class)
+            ->where('role', Role::ProgramHead->value);
     }
 }

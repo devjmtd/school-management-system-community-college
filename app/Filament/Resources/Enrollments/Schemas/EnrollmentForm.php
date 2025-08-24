@@ -45,6 +45,7 @@ class EnrollmentForm
                                     ->searchable()
                                     ->preload()
                                     ->relationship('program', 'name')
+                                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->name . ' - ' . $record->major)
                                     ->live(true)
                                     ->afterStateUpdated(function (Set $set) {
                                         $set('curriculum_id', null);

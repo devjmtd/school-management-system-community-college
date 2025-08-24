@@ -57,7 +57,7 @@ class AdminPortalPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->spa()
+//            ->spa()
             ->unsavedChangesAlerts()
             ->databaseTransactions()
             ->authMiddleware([
