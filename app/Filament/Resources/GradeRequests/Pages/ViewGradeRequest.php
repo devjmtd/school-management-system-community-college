@@ -4,10 +4,14 @@ namespace App\Filament\Resources\GradeRequests\Pages;
 
 use App\Enums\PrintRequestStatus;
 use App\Filament\Resources\GradeRequests\GradeRequestResource;
+use App\Models\Enrollment;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Spatie\Browsershot\Browsershot;
 
 class ViewGradeRequest extends ViewRecord
 {
@@ -92,14 +96,64 @@ class ViewGradeRequest extends ViewRecord
                 ->label('Print')
                 ->color('success')
                 ->icon('heroicon-s-printer')
-                ->requiresConfirmation()
-                ->modalDescription('Are you sure you want to print this request?')
-                ->action(function () {
-                    Notification::make()
-                        ->success()
-                        ->title('Request Printed')
-                        ->body('Simulated print')
-                        ->send();
+                ->schema([
+                    TextInput::make('purpose')
+                        ->required()
+                        ->default('Any')
+                        ->label('Purpose')
+                        ->placeholder('Enter purpose')
+                        ->maxLength(255),
+                    Select::make('year_level')
+                        ->required()
+                        ->label('Year Level')
+                        ->options([
+                            'first' => 'First Year',
+                            'second' => 'Second Year',
+                            'third' => 'Third Year',
+                            'fourth' => 'Fourth Year',
+                            'fifth' => 'Fifth Year',
+                        ]),
+                    Select::make('sem')
+                        ->required()
+                        ->label('Semester')
+                        ->options([
+                            '1st' => '1st Semester',
+                            '2nd' => '2nd Semester',
+                        ]),
+                    TextInput::make('gwa')
+                        ->required()
+                        ->label('General Weighted Average (GWA)')
+                        ->placeholder('Enter GWA')
+                        ->maxLength(255),
+                ])
+                ->action(function (array $data) {
+                    $fileName = \Str::slug($this->record->student->getAttribute('full_name')). '-grade.pdf';
+
+                    $enrollment = Enrollment::where('school_year_id', $this->record->school_year_id)
+                        ->where('student_id', $this->record->student_id)
+                        ->first();
+
+                    if (!$enrollment) {
+                        Notification::make()
+                            ->danger()
+                            ->title('Enrollment Not Found')
+                            ->body('Enrollment not found for the given school year and student')
+                            ->send();
+                    }
+
+                    $template = view('pdfs.grades', [
+                        'enrollment' => $enrollment,
+                        'purpose' => data_get($data, 'purpose'),
+                        'year_level' => data_get($data, 'year_level'),
+                        'sem' => data_get($data, 'sem'),
+                        'gwa' => data_get($data, 'gwa'),
+                    ])->render();
+
+                    Browsershot::html($template)
+                        ->format('A4')
+                        ->save($fileName);
+
+                    return response()->download($fileName)->deleteFileAfterSend(true);
                 })
                 ->visible(fn($record): bool => $record->status == PrintRequestStatus::Processing),
         ];
