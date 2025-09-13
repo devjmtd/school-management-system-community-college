@@ -20,6 +20,7 @@ class TORRequestsTable
                 TextColumn::make('student.full_name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('studentProgram.program.name'),
                 TextColumn::make('status')
                     ->badge()
                     ->searchable(),

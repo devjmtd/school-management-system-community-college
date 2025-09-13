@@ -85,7 +85,7 @@ class EditStudent extends EditRecord
 
         $student->user()->update([
             'email' => data_get($data, 'email'),
-            'name' => data_get($data, 'full_name'),
+            'name' => $student->first_name . ' ' . $student->last_name,
         ]);
 
         return $student;

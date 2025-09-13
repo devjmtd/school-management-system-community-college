@@ -16,6 +16,8 @@ class TORRequestInfolist
                     ->schema([
                         TextEntry::make('student.full_name')
                             ->label('Student'),
+                        TextEntry::make('studentProgram.program.name')
+                            ->label('Program'),
                         TextEntry::make('status')
                             ->badge(),
                         TextEntry::make('preparedBy.name')

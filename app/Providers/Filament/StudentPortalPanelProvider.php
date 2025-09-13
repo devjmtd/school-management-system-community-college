@@ -29,7 +29,7 @@ class StudentPortalPanelProvider extends PanelProvider
             ->path('student-portal')
             ->login(Login::class)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#2f3461',
             ])
             ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/StudentPortal/Resources'), for: 'App\Filament\StudentPortal\Resources')
@@ -53,6 +53,8 @@ class StudentPortalPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->brandLogo(asset('logo.png'))
+            ->brandLogoHeight('3rem')
             ->authMiddleware([
                 Authenticate::class,
             ]);

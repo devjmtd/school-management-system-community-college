@@ -29,7 +29,7 @@ class TeacherPortalPanelProvider extends PanelProvider
             ->path('teacher-portal')
             ->login(Login::class)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#2f3461',
             ])
             ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/TeacherPortal/Resources'), for: 'App\Filament\TeacherPortal\Resources')
@@ -53,6 +53,8 @@ class TeacherPortalPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->brandLogo(asset('logo.png'))
+            ->brandLogoHeight('3rem')
             ->authMiddleware([
                 Authenticate::class,
             ]);

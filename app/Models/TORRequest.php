@@ -15,6 +15,7 @@ class TORRequest extends Model
         'purpose',
         'student_id',
         'prepared_by',
+        'student_program_id',
     ];
 
     protected function casts(): array
@@ -27,6 +28,11 @@ class TORRequest extends Model
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);
+    }
+
+    public function studentProgram(): BelongsTo
+    {
+        return $this->belongsTo(StudentProgram::class);
     }
 
     public function preparedBy(): BelongsTo

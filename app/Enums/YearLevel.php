@@ -15,6 +15,17 @@ enum YearLevel: int implements HasLabel
     case Fourth = 4;
     case Fifth = 5;
 
+    public static function getAll(): array
+    {
+        return [
+            self::First,
+            self::Second,
+            self::Third,
+            self::Fourth,
+            self::Fifth,
+        ];
+    }
+
     public function getLabel(): ?string
     {
         return match ($this) {

@@ -77,14 +77,14 @@ class StudentResource extends Resource
                                     ->maxLength(500),
                                 TextInput::make('citizenship')
                                     ->maxLength(255),
-                                Select::make('gender')
+                                Select::make('others.gender')
                                     ->options([
                                         'Male' => 'Male',
                                         'Female' => 'Female',
                                     ]),
-                                TextInput::make('height')
+                                TextInput::make('others.height')
                                     ->numeric(),
-                                TextInput::make('weight')
+                                TextInput::make('others.weight')
                                     ->numeric(),
                                 TextInput::make('blood_type')
                                     ->maxLength(255),

@@ -43,6 +43,8 @@
 </head>
 <body class="w-full min-h-screen h-full flex flex-col items-center justify-around">
     <div class="w-full max-w-full h-full flex flex-col items-center justify-center p-4 text-[8px]">
+        <img src="{{ asset('logo.png') }}" alt="Logo" class="size-20 absolute top-4 left-32">
+        <img src="{{ asset('logo.png') }}" alt="Logo" class="w-2/5 absolute bottom-30 opacity-5">
         <div class="w-full h-full flex flex-col items-center justify-center">
             <h4 class="uppercase font-bold">Calabanga Community College</h4>
             <h5 class="">Calabanga, Camarines Sur</h5>
@@ -201,6 +203,8 @@
         </div>
     </div>
     <div class="w-full max-w-full h-full flex flex-col items-center justify-center p-4 text-[8px] border-t border-dashed">
+        <img src="{{ asset('logo.png') }}" alt="Logo" class="size-20 absolute top-[53%] left-32">
+        <img src="{{ asset('logo.png') }}" alt="Logo" class="w-2/5 absolute top-30 opacity-5">
         <div class="w-full h-full flex flex-col items-center justify-center">
             <h4 class="uppercase font-bold">Calabanga Community College</h4>
             <h5 class="">Calabanga, Camarines Sur</h5>

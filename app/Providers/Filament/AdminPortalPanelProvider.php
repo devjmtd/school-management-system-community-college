@@ -33,7 +33,7 @@ class AdminPortalPanelProvider extends PanelProvider
             ->profile(isSimple: false)
             ->brandName('Admin Portal')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => '#2f3461',
             ])
             ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -57,7 +57,8 @@ class AdminPortalPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-//            ->spa()
+            ->brandLogo(asset('logo.png'))
+            ->brandLogoHeight('3rem')
             ->unsavedChangesAlerts()
             ->databaseTransactions()
             ->authMiddleware([

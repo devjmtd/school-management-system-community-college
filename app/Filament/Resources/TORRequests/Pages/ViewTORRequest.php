@@ -4,10 +4,16 @@ namespace App\Filament\Resources\TORRequests\Pages;
 
 use App\Enums\PrintRequestStatus;
 use App\Filament\Resources\TORRequests\TORRequestResource;
+use App\Models\Enrollment;
+use App\Models\StudentProgram;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
+use Spatie\Browsershot\Browsershot;
+use Symfony\Component\Console\Input\Input;
 
 class ViewTORRequest extends ViewRecord
 {
@@ -92,14 +98,62 @@ class ViewTORRequest extends ViewRecord
                 ->label('Print')
                 ->color('success')
                 ->icon('heroicon-s-printer')
-                ->requiresConfirmation()
-                ->modalDescription('Are you sure you want to print this request?')
-                ->action(function () {
-                    Notification::make()
-                        ->success()
-                        ->title('Request Printed')
-                        ->body('Simulated print')
-                        ->send();
+                ->schema([
+                    TextInput::make('purpose')
+                        ->required()
+                        ->default('Any')
+                        ->label('Purpose')
+                        ->placeholder('Enter purpose')
+                        ->maxLength(255),
+                    DatePicker::make('dateOfAdmission')
+                        ->required()
+                        ->label('Date of Admission')
+                        ->placeholder('Enter date of admission'),
+                    DatePicker::make('dateOfGraduation')
+                        ->required()
+                        ->label('Date of Graduation')
+                        ->placeholder('Enter date of graduation'),
+                    TextInput::make('checker')
+                        ->required()
+                        ->label('Checked By')
+                        ->placeholder('Enter checker'),
+                    TextInput::make('signatory')
+                        ->required()
+                        ->label('Signatory')
+                        ->placeholder('Enter signatory'),
+                    DatePicker::make('dateOfReleased')
+                        ->required()
+                        ->label('Date of Released')
+                        ->placeholder('Enter date of released'),
+                ])
+                ->action(function (array $data) {
+                    $fileName = \Str::slug($this->record->student->getAttribute('full_name')). '-tor.pdf';
+
+                    $studentProgram = StudentProgram::find($this->record->student_program_id);
+
+                    if (!$studentProgram) {
+                        Notification::make()
+                            ->danger()
+                            ->title('Student Program Not Found')
+                            ->body('Student Program not found')
+                            ->send();
+                    }
+
+                    $template = view('pdfs.tor', [
+                        'studentProgram' => $studentProgram,
+                        'purpose' => data_get($data, 'purpose'),
+                        'dateOfAdmission' => data_get($data, 'dateOfAdmission'),
+                        'dateOfGraduation' => data_get($data, 'dateOfGraduation'),
+                        'checker' => data_get($data, 'checker'),
+                        'signatory' => data_get($data, 'signatory'),
+                        'dateOfReleased' => data_get($data, 'dateOfReleased'),
+                    ])->render();
+
+                    Browsershot::html($template)
+                        ->format('A4')
+                        ->save($fileName);
+
+                    return response()->download($fileName)->deleteFileAfterSend(true);
                 })
                 ->visible(fn($record): bool => $record->status == PrintRequestStatus::Processing),
         ];

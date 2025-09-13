@@ -26,6 +26,8 @@ class TORRequestsTable
                     ->badge()
                     ->label('Status')
                     ->formatStateUsing(fn(?PrintRequestStatus $state) => $state?->name),
+                TextColumn::make('studentProgram.program.name')
+                    ->label('Program'),
                 TextColumn::make('created_at')
                     ->label('Date Requested'),
                 TextColumn::make('preparedBy.name'),
