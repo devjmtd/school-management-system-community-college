@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Livewire\CurrentSYOverview;
 use Filament\Auth\Pages\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -39,8 +40,9 @@ class TeacherPortalPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/TeacherPortal/Widgets'), for: 'App\Filament\TeacherPortal\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                CurrentSYOverview::class,
+//                AccountWidget::class,
+//                FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

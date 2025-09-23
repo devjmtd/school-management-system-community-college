@@ -28,6 +28,11 @@ class SchoolYear extends Model
 
     public function getIsCurrentAttribute(): bool
     {
+        if (!$this->start_date || !$this->end_date)
+        {
+            return false;
+        }
+
         return now()->between($this->start_date, $this->end_date);
     }
 
