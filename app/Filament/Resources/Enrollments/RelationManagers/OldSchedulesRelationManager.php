@@ -194,9 +194,9 @@ class OldSchedulesRelationManager extends RelationManager
                     ->color('primary')
                     ->recordSelectOptionsQuery(function (Builder $query) {
                         return $query
-                            ->join('subjects', 'schedules.subject_id', '=', 'subjects.id')
-                            ->join('rooms', 'schedules.room_id', '=', 'rooms.id')
-                            ->join('users', 'schedules.teacher_id', '=', 'users.id')
+                            ->leftJoin('subjects', 'schedules.subject_id', '=', 'subjects.id')
+                            ->leftJoin('rooms', 'schedules.room_id', '=', 'rooms.id')
+                            ->leftJoin('users', 'schedules.teacher_id', '=', 'users.id')
                             ->where('school_year_id', $this->getOwnerRecord()->getAttribute('school_year_id'))
                             ->whereNotIn('subject_id', $this->getOwnerRecord()->schedules->pluck('id')->toArray());
                     })

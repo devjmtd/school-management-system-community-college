@@ -41,24 +41,6 @@ class EnrollmentsTable
                     ->searchable()
                     ->options(SchoolYear::all()->pluck('name', 'id')),
             ])
-            ->headerActions([
-                Action::make('add-schedule')
-                    ->label('Add Schedule')
-                    ->icon('heroicon-s-plus')
-                    ->color('primary')
-                    ->modalWidth('lg')
-                    ->modalHeading('Add Schedule')
-                    ->schema([
-                        Select::make('schedules')
-                            ->options([
-                                'Schedule 1' => 'Schedule 1',
-                                'Schedule 2' => 'Schedule 2',
-                            ])
-                    ])
-                    ->action(function (array $data){
-                        dd($data);
-                    })
-            ])
             ->recordActions([
                 EditAction::make(),
             ])

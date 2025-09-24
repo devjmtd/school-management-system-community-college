@@ -112,8 +112,8 @@ class EditCurriculum extends Page implements HasTable
                             computerLabUnits: data_get($data, 'computer_lab_units'),
                             nstpUnits: data_get($data, 'nstp_units'),
                             description: data_get($data, 'description'),
-                            semester: data_get($data, 'semester'),
-                            yearLevel: data_get($data, 'year_level'),
+                            semester: data_get($data, 'semester')->value,
+                            yearLevel: data_get($data, 'year_level')->value,
                             curriculumId: $this->curriculum->id,
                         ));
                     }),
@@ -139,8 +139,8 @@ class EditCurriculum extends Page implements HasTable
                             subjectId: data_get($data, 'subject'),
                             subjectCode: data_get($data, 'code'),
                             curriculumId: $this->curriculum->id,
-                            yearLevel: data_get($data, 'year_level'),
-                            semester: data_get($data, 'semester'),
+                            yearLevel: data_get($data, 'year_level')->value,
+                            semester: data_get($data, 'semester')->value,
                         ));
                     }),
             ])
