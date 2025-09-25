@@ -57,6 +57,9 @@ class StudentPortalPanelProvider extends PanelProvider
             ])
             ->brandLogo(asset('logo.png'))
             ->brandLogoHeight('3rem')
+            ->sidebarCollapsibleOnDesktop()
+            ->darkMode(false)
+            ->viteTheme('resources/css/filament/admin-portal/theme.css')
             ->authMiddleware([
                 Authenticate::class,
             ]);

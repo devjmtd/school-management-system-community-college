@@ -1,0 +1,65 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+.fi-sidebar-nav {
+    @apply bg-[#092442];
+}
+
+.fi-sidebar-item-label {
+    @apply text-white;
+}
+
+.fi-sidebar-item-icon {
+    @apply text-white;
+}
+
+.fi-sidebar-group-label {
+    @apply text-gray-200;
+}
+
+.fi-sidebar-item {
+    &.fi-active {
+        & > .fi-sidebar-item-btn {
+            background-color: #243955;
+        }
+    }
+    &.fi-sidebar-item-has-url {
+        & > .fi-sidebar-item-btn {
+            &:hover {
+                @media (hover: hover) {
+                    background-color: #243955;
+                }
+            }
+        }
+    }
+}
+
+.fi-body {
+    @apply bg-[#F8F9FA];
+}
+
+.fi-main {
+    @apply !bg-[#F8F9FA];
+}
+
+.fi-btn.fi-color-primary.fi-ac-btn-action {
+    @apply bg-[#092442] text-white;
+}
+
+.fi-simple-layout {
+    position: relative;
+    overflow: hidden;
+}
+
+.fi-simple-layout::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("@images/bg-auth.jpg") no-repeat center center fixed;
+    background-size: cover;
+    filter: blur(8px);
+    transform: scale(1.1);
+    z-index: -1;
+}

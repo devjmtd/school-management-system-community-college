@@ -34,7 +34,7 @@ class AdminPortalPanelProvider extends PanelProvider
             ->profile(isSimple: false)
             ->brandName('Admin Portal')
             ->colors([
-                'primary' => '#2f3461',
+                'primary' => Color::hex('#2f3461'),
             ])
             ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -63,6 +63,9 @@ class AdminPortalPanelProvider extends PanelProvider
             ->brandLogoHeight('3rem')
             ->unsavedChangesAlerts()
             ->databaseTransactions()
+            ->darkMode(false)
+            ->sidebarCollapsibleOnDesktop()
+            ->viteTheme('resources/css/filament/admin-portal/theme.css')
             ->authMiddleware([
                 Authenticate::class,
             ]);
