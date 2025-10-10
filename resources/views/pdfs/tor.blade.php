@@ -6,6 +6,7 @@
     'checker' => auth()->user()->name,
     'signatory' => auth()->user()->name,
     'dateOfReleased' => now()->format('F d, Y'),
+    'soNumber' => null,
 ])
 
 @php
@@ -58,7 +59,7 @@
                         <div class="w-full flex flex-col">
                             <div class="grid grid-cols-3">
                                 <div><span>Name: </span><b class="underline uppercase">{{ $studentProgram->student->full_name }}</b></div>
-                                <div><span>Gender: </span><span class="underline uppercase">{{ $studentProgram->student->others['gender'] }}</span></div>
+                                <div><span>Gender: </span><span class="underline uppercase">{{ $studentProgram->student->others ? $studentProgram->student->others['gender'] : '' }}</span></div>
                                 <div><span>Citizenship: </span><span class="underline uppercase">{{ $studentProgram->student->citizenship }}</span></div>
                             </div>
                             <div class="w-full grid grid-cols-3">
@@ -316,7 +317,7 @@
                         <div class="w-full flex flex-col">
                             <div class="grid grid-cols-3">
                                 <div><span>Name: </span><b class="underline uppercase">{{ $studentProgram->student->full_name }}</b></div>
-                                <div><span>Gender: </span><span class="underline uppercase">{{ $studentProgram->student->others['gender'] }}</span></div>
+                                <div><span>Gender: </span><span class="underline uppercase">{{ $studentProgram->student->others ? $studentProgram->student->others['gender'] : '' }}</span></div>
                                 <div><span>Citizenship: </span><span class="underline uppercase">{{ $studentProgram->student->citizenship }}</span></div>
                             </div>
                             <div class="w-full grid grid-cols-3">
@@ -548,7 +549,7 @@
                         <div class="w-full flex flex-col">
                             <div class="grid grid-cols-3">
                                 <div><span>Name: </span><b class="underline uppercase">{{ $studentProgram->student->full_name }}</b></div>
-                                <div><span>Gender: </span><span class="underline uppercase">{{ $studentProgram->student->others['gender'] }}</span></div>
+                                <div><span>Gender: </span><span class="underline uppercase">{{ $studentProgram->student->others ? $studentProgram->student->others['gender'] : '' }}</span></div>
                                 <div><span>Citizenship: </span><span class="underline uppercase">{{ $studentProgram->student->citizenship }}</span></div>
                             </div>
                             <div class="w-full grid grid-cols-3">
@@ -666,7 +667,7 @@
                         <p class="text-center italic font-bold">"Graduated with the degree of {{ $studentProgram->program->name }} @isset($studentProgram->program->major) major in {{ $studentProgram->program->major }} @endisset last {{ $dateOfGraduation }} and his/her degree is covered by Certificate of Program Compliance No. 53 s. 2021".</p>
                     </div>
                     <div class="flex flex-col w-full mt-4">
-                        <div><span class="italic">Special Order No.: &emsp;</span><b>{{ $studentProgram->student->special_order_no }}</b></div>
+                        <div><span class="italic">Special Order No.: &emsp;</span><b>{{ $soNumber ?? $studentProgram->student->special_order_no }}</b></div>
                         <div><span class="italic">Date of Released: &emsp;&emsp;</span><b>{{ $dateOfReleased }}</b></div>
                         <div><span class="italic">NSTP Serial No. &emsp;&emsp;&emsp; </span><b>{{ $studentProgram->student->nstp_serial_no }}</b></div>
                     </div>

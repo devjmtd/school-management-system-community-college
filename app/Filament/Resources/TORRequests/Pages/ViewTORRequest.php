@@ -125,6 +125,9 @@ class ViewTORRequest extends ViewRecord
                         ->required()
                         ->label('Date of Released')
                         ->placeholder('Enter date of released'),
+                    TextInput::make('soNumber')
+                        ->label('Special Order No.')
+                        ->placeholder('Enter special order no.')
                 ])
                 ->action(function (array $data) {
                     $fileName = \Str::slug($this->record->student->getAttribute('full_name')). '-tor.pdf';
@@ -147,6 +150,7 @@ class ViewTORRequest extends ViewRecord
                         'checker' => data_get($data, 'checker'),
                         'signatory' => data_get($data, 'signatory'),
                         'dateOfReleased' => data_get($data, 'dateOfReleased'),
+                        'soNumber' => data_get($data, 'soNumber'),
                     ])->render();
 
                     Browsershot::html($template)

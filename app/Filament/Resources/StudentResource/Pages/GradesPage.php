@@ -2,11 +2,19 @@
 
 namespace App\Filament\Resources\StudentResource\Pages;
 
+use App\Enums\PrintRequestStatus;
 use App\Filament\Resources\StudentResource;
+use App\Models\Enrollment;
 use App\Models\Grade;
+use App\Models\SchoolYear;
 use App\Models\StudentProgram;
+use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
@@ -21,6 +29,7 @@ use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Browsershot\Browsershot;
 
 class GradesPage extends Page implements  HasTable, HasSchemas
 {
@@ -49,6 +58,127 @@ class GradesPage extends Page implements  HasTable, HasSchemas
     public function getSubheading(): string|Htmlable
     {
         return $this->record->student->first_name . ' ' . $this->record->student->last_name;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('printTOR')
+                ->label('Print TOR')
+                ->color('success')
+                ->icon('heroicon-s-printer')
+                ->schema([
+                    TextInput::make('purpose')
+                        ->required()
+                        ->default('Any')
+                        ->label('Purpose')
+                        ->placeholder('Enter purpose')
+                        ->maxLength(255),
+                    DatePicker::make('dateOfAdmission')
+                        ->required()
+                        ->label('Date of Admission')
+                        ->placeholder('Enter date of admission'),
+                    DatePicker::make('dateOfGraduation')
+                        ->required()
+                        ->label('Date of Graduation')
+                        ->placeholder('Enter date of graduation'),
+                    TextInput::make('checker')
+                        ->required()
+                        ->label('Checked By')
+                        ->placeholder('Enter checker'),
+                    TextInput::make('signatory')
+                        ->required()
+                        ->label('Signatory')
+                        ->placeholder('Enter signatory'),
+                    DatePicker::make('dateOfReleased')
+                        ->required()
+                        ->label('Date of Released')
+                        ->placeholder('Enter date of released'),
+                    TextInput::make('soNumber')
+                        ->label('Special Order No.')
+                        ->placeholder('Enter special order no.')
+                ])
+                ->action(function (array $data) {
+                    $fileName = \Str::slug($this->record->student->getAttribute('full_name')). '-tor.pdf';
+
+                    $template = view('pdfs.tor', [
+                        'studentProgram' => $this->record,
+                        'purpose' => data_get($data, 'purpose'),
+                        'dateOfAdmission' => data_get($data, 'dateOfAdmission'),
+                        'dateOfGraduation' => data_get($data, 'dateOfGraduation'),
+                        'checker' => data_get($data, 'checker'),
+                        'signatory' => data_get($data, 'signatory'),
+                        'dateOfReleased' => data_get($data, 'dateOfReleased'),
+                        'soNumber' => data_get($data, 'soNumber'),
+                    ])->render();
+
+                    Browsershot::html($template)
+                        ->format('A4')
+                        ->save($fileName);
+
+                    return response()->download($fileName)->deleteFileAfterSend(true);
+                }),
+            Action::make('printGrade')
+                ->label('Print Grades')
+                ->color('success')
+                ->icon('heroicon-s-printer')
+                ->schema([
+                    TextInput::make('purpose')
+                        ->required()
+                        ->default('Any')
+                        ->label('Purpose')
+                        ->placeholder('Enter purpose')
+                        ->maxLength(255),
+                    Select::make('year_level')
+                        ->required()
+                        ->label('Year Level')
+                        ->options([
+                            1 => 'First Year',
+                            2 => 'Second Year',
+                            3 => 'Third Year',
+                            4 => 'Fourth Year',
+                            5 => 'Fifth Year',
+                        ]),
+                    Select::make('sem')
+                        ->required()
+                        ->label('Semester')
+                        ->options([
+                            1 => '1st Semester',
+                            2 => '2nd Semester',
+                        ]),
+                    TextInput::make('gwa')
+                        ->required()
+                        ->label('General Weighted Average (GWA)')
+                        ->placeholder('Enter GWA')
+                        ->maxLength(255),
+                    TextInput::make('school_year')
+                        ->required()
+                        ->label('School Year')
+                        ->default(fn() => SchoolYear::current()->first()->name),
+                ])
+                ->action(function (array $data) {
+                    $fileName = \Str::slug($this->record->student->getAttribute('full_name')). '-grade.pdf';
+
+                    $curriculumSubjects = $this->record->curriculum->curriculumSubjects->where('year_level', data_get($data,'year_level'))->where('semester', data_get($data,'sem'));
+
+                    $template = view('pdfs.grades-print', [
+                        'curriculumSubjects' => $curriculumSubjects,
+                        'purpose' => data_get($data, 'purpose'),
+                        'year_level' => data_get($data, 'year_level'),
+                        'sem' => data_get($data, 'sem'),
+                        'gwa' => data_get($data, 'gwa'),
+                        'student_id' => $this->record->student->id,
+                        'student' => $this->record->student,
+                        'school_year' => data_get($data, 'school_year'),
+                    ])->render();
+
+                    Browsershot::html($template)
+                        ->format('A4')
+                        ->save($fileName);
+
+                    return response()->download($fileName)->deleteFileAfterSend(true);
+                })
+        ];
     }
 
     public function table(Table $table): Table
