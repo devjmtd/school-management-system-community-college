@@ -33,6 +33,7 @@ class GradeRequestsTable
             ])
             ->modifyQueryUsing(fn(Builder $query): Builder => $query
                 ->where('student_id', auth()->user()->student->id)
+                ->latest()
             )
             ->filters([
                 SelectFilter::make('status')

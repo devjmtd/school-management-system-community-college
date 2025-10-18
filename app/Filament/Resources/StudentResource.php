@@ -90,8 +90,6 @@ class StudentResource extends Resource
                                     ->maxLength(255),
                                 TextInput::make('religion')
                                     ->maxLength(255),
-                                TextInput::make('citizenship')
-                                    ->maxLength(255),
                                 FileUpload::make('image')
                                     ->image()
                                     ->multiple(false),
