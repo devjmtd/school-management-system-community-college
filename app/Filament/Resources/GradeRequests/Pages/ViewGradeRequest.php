@@ -19,6 +19,8 @@ class ViewGradeRequest extends ViewRecord
 
     protected function getHeaderActions(): array
     {
+        $gwa = $this->record->getGWA();
+
         return [
             Action::make('reject')
                 ->color('danger')
@@ -124,13 +126,15 @@ class ViewGradeRequest extends ViewRecord
                         ->required()
                         ->label('General Weighted Average (GWA)')
                         ->placeholder('Enter GWA')
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->default($gwa),
                 ])
                 ->action(function (array $data) {
                     $fileName = \Str::slug($this->record->student->getAttribute('full_name')). '-grade.pdf';
 
                     $enrollment = Enrollment::where('school_year_id', $this->record->school_year_id)
                         ->where('student_id', $this->record->student_id)
+                        ->latest()
                         ->first();
 
                     if (!$enrollment) {

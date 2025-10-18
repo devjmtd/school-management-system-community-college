@@ -17,6 +17,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Tables\Columns\Layout\Panel;
@@ -138,14 +140,30 @@ class GradesPage extends Page implements  HasTable, HasSchemas
                             3 => 'Third Year',
                             4 => 'Fourth Year',
                             5 => 'Fifth Year',
-                        ]),
+                        ])
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($state, Get $get, Set $set) {
+                            $gwa = $this->getGWA($get('year_level'), $get('sem'));
+
+                            if ($gwa) {
+                                $set('gwa', $gwa);
+                            }
+                        }),
                     Select::make('sem')
                         ->required()
                         ->label('Semester')
                         ->options([
                             1 => '1st Semester',
                             2 => '2nd Semester',
-                        ]),
+                        ])
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($state, Get $get, Set $set) {
+                            $gwa = $this->getGWA($get('year_level'), $get('sem'));
+
+                            if ($gwa) {
+                                $set('gwa', $gwa);
+                            }
+                        }),
                     TextInput::make('gwa')
                         ->required()
                         ->label('General Weighted Average (GWA)')
@@ -244,5 +262,37 @@ class GradesPage extends Page implements  HasTable, HasSchemas
             ])
             ->defaultGroup('year_level')
             ->paginated(false);
+    }
+
+    private function getGWA(?int $yearLevel, ?int $sem): float|null
+    {
+        if(!$yearLevel || !$sem){
+            return null;
+        }
+
+        $curriculumSubjects = $this->record->curriculum
+            ->curriculumSubjects
+            ->where('year_level', $yearLevel)
+            ->where('semester', $sem);
+
+        $grades = Grade::where('student_id', $this->record->student->id)->get();
+
+        $totalUnits = 0;
+        $totalGrades = 0;
+
+        foreach($curriculumSubjects as $subject) {
+            $grade = $grades->where('subject_id', $subject->subject_id)->first();
+
+            if($grade && $grade->average){
+                $totalUnits += $subject->subject->units;
+                $totalGrades += $grade->average * $subject->subject->units;
+            }
+        }
+
+        if($totalUnits === 0){
+            return 0;
+        }
+
+        return number_format($totalGrades / $totalUnits, 2);
     }
 }
