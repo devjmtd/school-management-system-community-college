@@ -10,6 +10,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class TORRequestsTable
 {
@@ -36,6 +37,7 @@ class TORRequestsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->modifyQueryUsing(fn(Builder $query) => $query->latest())
             ->filters([
                 SelectFilter::make('status')
                     ->options(PrintRequestStatus::class),

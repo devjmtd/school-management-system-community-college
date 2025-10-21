@@ -42,6 +42,7 @@ class Schedule extends Model
         'start_time_formatted',
         'end_time_formatted',
         'day_of_week_name',
+        'time',
     ];
 
     public function getNameAttribute(): string
@@ -89,6 +90,11 @@ class Schedule extends Model
         $endTime = \DateTime::createFromFormat('H:i:s', $this->end_time);
 
         return $endTime->format('h:i A');
+    }
+
+    public function getTimeAttribute(): string
+    {
+        return $this->start_time_formatted . ' - ' . $this->end_time_formatted;
     }
 
     public function getDayOfWeekNameAttribute(): string

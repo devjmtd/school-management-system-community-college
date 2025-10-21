@@ -24,7 +24,7 @@ class TeacherAvailabilityRule implements ValidationRule
             return;
         }
 
-        $schoolYearId = SchoolYear::find($this->schoolYearId)->firstOrFail()->id;
+        $schoolYearId = SchoolYear::where('id', $this->schoolYearId)->firstOrFail()->id;
 
         $schedule = Schedule::where('teacher_id', $value)
             ->when(isset($this->scheduleId), function ($query) {

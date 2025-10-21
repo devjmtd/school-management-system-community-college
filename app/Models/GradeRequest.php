@@ -23,6 +23,30 @@ class GradeRequest extends Model
         ];
     }
 
+    public function getGWA(): float|null
+    {
+        $enrollment = Enrollment::where('school_year_id', $this->school_year_id)
+            ->where('student_id', $this->student_id)
+            ->latest()
+            ->first();
+
+        $units = 0;
+        $grades = 0;
+
+        foreach ($enrollment->enrollmentSchedules as $schedule) {
+            if ($schedule->average) {
+                $grades += $schedule->average * $schedule->schedule->subject->units;
+                $units += $schedule->schedule->subject->units;
+            }
+        }
+
+        if ($units === 0) {
+            return 0;
+        }
+
+        return $grades / $units;
+    }
+
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);

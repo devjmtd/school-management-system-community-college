@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\StudentPortal\Widgets\ScheduleList;
 use App\Livewire\CurrentSYOverview;
 use Filament\Auth\Pages\Login;
 use Filament\Http\Middleware\Authenticate;
@@ -41,6 +42,7 @@ class StudentPortalPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/StudentPortal/Widgets'), for: 'App\Filament\StudentPortal\Widgets')
             ->widgets([
                 CurrentSYOverview::class,
+                ScheduleList::class,
 //                AccountWidget::class,
 //                FilamentInfoWidget::class,
             ])
