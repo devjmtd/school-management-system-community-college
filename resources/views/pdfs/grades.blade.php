@@ -4,6 +4,7 @@
     'year_level' => 'first',
     'sem' => '1st',
     'gwa' => null,
+    'program' => null,
 ])
 
 @php
@@ -52,7 +53,7 @@
            <div class="w-full flex flex-col font-serif">
                <b>To Whom It May Concern:</b>
                <p class="mt-4">&emsp; &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; This is to certify that as per records on file in this office, <span class="uppercase font-bold underline">{{ $enrollment->student->first_name }} {{ $enrollment->student->middle_name }} {{ $enrollment->student->last_name }}</span>
-                   has taken the following subjects in Bachelor of Science in Entrepreneurship during {{ $year_level }} year {{ $sem }} Semester S/Y {{ $enrollment->schoolYear->name }}, with corresponding ratings and credits below:</p>
+                   has taken the following subjects in {{ $program }} during {{ $year_level }} year {{ $sem }} Semester S/Y {{ $enrollment->schoolYear->name }}, with corresponding ratings and credits below:</p>
                <table class="mt-4 border -mx-4 text-sm">
                    <thead>
                         <tr>

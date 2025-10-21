@@ -8,6 +8,7 @@
     'student_id' => null,
     'student' => null,
     'school_year' => null,
+    'program' => null,
 ])
 
 @php
@@ -60,7 +61,7 @@
             <p class="mt-4">&emsp; &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; This is to certify that as per records on
                 file in this office, <span
                         class="uppercase font-bold underline">{{ $student->first_name }} {{ $student->middle_name }} {{ $student->last_name }}</span>
-                has taken the following subjects in Bachelor of Science in Entrepreneurship during {{ $year_level }}
+                has taken the following subjects in {{ $program }} during {{ $year_level }}
                 year {{ $sem }} Semester S/Y {{ $school_year }}, with corresponding ratings and credits
                 below:</p>
             <table class="mt-4 border -mx-4 text-sm">
