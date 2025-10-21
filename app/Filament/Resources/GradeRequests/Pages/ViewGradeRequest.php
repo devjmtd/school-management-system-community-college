@@ -145,7 +145,7 @@ class ViewGradeRequest extends ViewRecord
                             ->send();
                     }
 
-                    $program = $enrollment->curriculum->program->name . ($enrollment->curriculum->program->major ? ' major in' . $enrollment->curriculum->program->major : '');
+                    $program = $enrollment->curriculum->program->name . ($enrollment->curriculum->program->major ? ' major in ' . $enrollment->curriculum->program->major : '');
 
                     $template = view('pdfs.grades', [
                         'enrollment' => $enrollment,
