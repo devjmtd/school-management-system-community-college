@@ -9,12 +9,12 @@ class CreateScheduleStudentGradeChangeRequestData
     public function __construct(
         public int $studentId,
         public int $subjectId,
-        public float $prelimsGrade,
-        public float $midtermsGrade,
-        public float $preFinalsGrade,
-        public float $finalsGrade,
-        public float $average,
-        public int $scheduleId,
+        public ?float $prelimsGrade,
+        public ?float $midtermsGrade,
+        public ?float $preFinalsGrade,
+        public ?float $finalsGrade,
+        public ?float $average,
+        public ?int $scheduleId,
         public ?string $remarks,
     ) {}
 }
