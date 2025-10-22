@@ -33,6 +33,7 @@ class StudentPortalPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#2f3461',
             ])
+            ->profile(isSimple: false)
             ->databaseNotifications()
             ->discoverResources(in: app_path('Filament/StudentPortal/Resources'), for: 'App\Filament\StudentPortal\Resources')
             ->discoverPages(in: app_path('Filament/StudentPortal/Pages'), for: 'App\Filament\StudentPortal\Pages')

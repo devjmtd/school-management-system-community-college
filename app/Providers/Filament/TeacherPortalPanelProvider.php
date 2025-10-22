@@ -29,7 +29,7 @@ class TeacherPortalPanelProvider extends PanelProvider
             ->id('teacher-portal')
             ->path('teacher-portal')
             ->login(Login::class)
-            ->profile()
+            ->profile(isSimple: false)
             ->colors([
                 'primary' => '#2f3461',
             ])
