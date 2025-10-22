@@ -18,11 +18,7 @@ class GradeRequestForm
     {
         $programs = auth()->user()->student->studentPrograms;
 
-        $curriculums = $programs->map(function (StudentProgram $program) {
-            return [
-                $program->curriculum_id => $program->program->name . ' - ' . $program->curriculum->name,
-            ];
-        });
+        $curriculums = $programs->pluck('program.name','curriculum_id')->toArray();
 
         return $schema
             ->components([
@@ -47,7 +43,7 @@ class GradeRequestForm
                             ]),
                         Select::make('curriculum_id')
                             ->label('Program')
-                            ->options(array_merge(...$curriculums)),
+                            ->options($curriculums),
                         Textarea::make('purpose')
                             ->required()
                             ->maxLength(1000),
