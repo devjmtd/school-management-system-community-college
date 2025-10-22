@@ -18,9 +18,10 @@ class GradeRequestsTable
     {
         return $table
             ->columns([
-                TextColumn::make('student.full_name')
-                    ->searchable()
-                    ->sortable(),
+                TextColumn::make('year_level'),
+                TextColumn::make('semester'),
+                TextColumn::make('curriculum.program.name')
+                    ->label('Program'),
                 TextColumn::make('status')
                     ->badge()
                     ->searchable(),

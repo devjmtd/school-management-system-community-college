@@ -179,8 +179,6 @@ class GradesPage extends Page implements  HasTable, HasSchemas
 
                     $curriculumSubjects = $this->record->curriculum->curriculumSubjects->where('year_level', data_get($data,'year_level'))->where('semester', data_get($data,'sem'));
 
-                    $program = $this->record->curriculum->program->name . ($this->record->curriculum->program->major ? ' major in ' . $this->record->curriculum->program->major : '');
-
                     $template = view('pdfs.grades-print', [
                         'curriculumSubjects' => $curriculumSubjects,
                         'purpose' => data_get($data, 'purpose'),

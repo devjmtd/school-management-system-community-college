@@ -16,8 +16,13 @@ class GradeRequestInfolist
                     ->schema([
                         TextEntry::make('student.full_name')
                             ->label('Student'),
-                        TextEntry::make('schoolYear.name')
-                            ->numeric(),
+                        TextEntry::make('year_level')
+                            ->label('Year Level'),
+                        TextEntry::make('semester')
+                            ->label('Semester'),
+                        TextEntry::make('curriculum.program.name')
+                            ->label('Program'),
+                        TextEntry::make('purpose'),
                         TextEntry::make('status')
                             ->badge(),
                         TextEntry::make('preparedBy.name')
