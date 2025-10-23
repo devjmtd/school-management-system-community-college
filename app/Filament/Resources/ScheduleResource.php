@@ -214,6 +214,12 @@ class ScheduleResource extends Resource
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
                             ->when(
+                                $data['school_year_id'],
+                                function (ScheduleQuery $query) use ($data) {
+                                    return $query->where('school_year_id', $data['school_year_id']);
+                                }
+                            )
+                            ->when(
                                 $data['program_id'],
                                 function (ScheduleQuery $query) use ($data) {
                                     $subjects = CurriculumSubject::whereHas('curriculum', function (Builder $query) use ($data) {
