@@ -29,7 +29,7 @@ class TeacherPortalPanelProvider extends PanelProvider
             ->id('teacher-portal')
             ->path('teacher-portal')
             ->login(Login::class)
-            ->profile()
+            ->profile(isSimple: false)
             ->colors([
                 'primary' => '#2f3461',
             ])
@@ -58,6 +58,7 @@ class TeacherPortalPanelProvider extends PanelProvider
             ])
             ->brandLogo(asset('logo.png'))
             ->brandLogoHeight('3rem')
+            ->globalSearch(false)
             ->sidebarCollapsibleOnDesktop()
             ->darkMode(false)
             ->viteTheme('resources/css/filament/admin-portal/theme.css')

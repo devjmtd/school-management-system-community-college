@@ -146,7 +146,6 @@ class ScheduleResource extends Resource
                         ->weight(FontWeight::Bold)
                         ->icon(Heroicon::BookOpen)
                         ->formatStateUsing(fn ($state): string => "{$state} units")
-                        ->searchable()
                         ->sortable(),
                     Stack::make([
                         TextColumn::make('teacher.name')
@@ -173,14 +172,12 @@ class ScheduleResource extends Resource
                         TextColumn::make('day_of_week')
                             ->icon(Heroicon::CalendarDays)
                             ->formatStateUsing(fn($record): string =>$record->day_of_week->name)
-                            ->searchable()
                             ->sortable(),
                     ])->visible(fn($record): bool => filled($record->day_of_week)),
                     Stack::make([
                         TextColumn::make('start_time')
                             ->icon(Heroicon::Clock)
                             ->formatStateUsing(fn($record): string => Carbon::parse($record->start_time)->format('h:i A') ."-". Carbon::parse($record->end_time)->format('h:i A'))
-                            ->searchable()
                             ->sortable(),
                     ])->visible(fn($record): bool => filled($record->start_time)),
                 ]),
@@ -213,6 +210,12 @@ class ScheduleResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
+                            ->when(
+                                $data['school_year_id'],
+                                function (ScheduleQuery $query) use ($data) {
+                                    return $query->where('school_year_id', $data['school_year_id']);
+                                }
+                            )
                             ->when(
                                 $data['program_id'],
                                 function (ScheduleQuery $query) use ($data) {

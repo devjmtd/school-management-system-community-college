@@ -19,13 +19,15 @@ class GradeRequestsTable
         return $table
             ->columns([
                 TextColumn::make('student.full_name')
-                    ->searchable()
+                    ->searchable(['first_name', 'last_name'])
                     ->sortable(),
+                TextColumn::make('year_level'),
+                TextColumn::make('semester'),
+                TextColumn::make('curriculum.program.name')
+                    ->label('Program'),
                 TextColumn::make('status')
                     ->badge()
                     ->searchable(),
-                TextColumn::make('schoolYear.name')
-                    ->sortable(),
                 TextColumn::make('preparedBy.name')
                     ->searchable()
                     ->sortable(),
@@ -38,7 +40,7 @@ class GradeRequestsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->modifyQueryUsing(fn(Builder $query) => $query->latest())
+            ->modifyQueryUsing(fn(Builder $query) => $query->whereNotNull('curriculum_id')->latest())
             ->filters([
                 SelectFilter::make('status')
                     ->options(PrintRequestStatus::class),

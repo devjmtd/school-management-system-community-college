@@ -19,7 +19,7 @@ class TORRequestsTable
         return $table
             ->columns([
                 TextColumn::make('student.full_name')
-                    ->searchable()
+                    ->searchable(['first_name', 'last_name'])
                     ->sortable(),
                 TextColumn::make('studentProgram.program.name'),
                 TextColumn::make('status')

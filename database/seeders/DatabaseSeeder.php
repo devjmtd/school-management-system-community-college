@@ -19,14 +19,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        if (User::count() === 0) {
-            User::create([
-                'name' => 'Admin',
-                'email' => 'admin@ccc.com',
-                'role' => Role::Admin,
-                'password' => \Hash::make('Welcome123'),
-            ]);
-        }
+//        if (User::count() === 0) {
+//            User::create([
+//                'name' => 'Admin',
+//                'email' => 'admin@ccc.com',
+//                'role' => Role::Admin,
+//                'password' => \Hash::make('Welcome123'),
+//            ]);
+//        }
 
         $this->call([
             ProgramSeeder::class,

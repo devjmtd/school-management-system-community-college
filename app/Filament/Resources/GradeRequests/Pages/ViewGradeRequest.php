@@ -5,6 +5,7 @@ namespace App\Filament\Resources\GradeRequests\Pages;
 use App\Enums\PrintRequestStatus;
 use App\Filament\Resources\GradeRequests\GradeRequestResource;
 use App\Models\Enrollment;
+use App\Models\SchoolYear;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
@@ -35,7 +36,7 @@ class ViewGradeRequest extends ViewRecord
                     Notification::make()
                         ->danger()
                         ->title('Request Rejected')
-                        ->body('Your grade request for '.$this->record->schoolYear->name.' has been rejected')
+                        ->body('Your grade request for '.$this->record->curriculum->program->name.' has been rejected')
                         ->sendToDatabase($this->record->student->user);
                 })
                 ->visible(fn($record): bool => $record->status == PrintRequestStatus::Requested),
@@ -54,7 +55,7 @@ class ViewGradeRequest extends ViewRecord
                     Notification::make()
                         ->success()
                         ->title('Request Processing')
-                        ->body('Your grade request for '.$this->record->schoolYear->name.' is being processed')
+                        ->body('Your grade request for '.$this->record->curriculum->program->name.' is being processed')
                         ->sendToDatabase($this->record->student->user);
                 })
                 ->visible(fn($record): bool => $record->status == PrintRequestStatus::Requested),
@@ -72,7 +73,7 @@ class ViewGradeRequest extends ViewRecord
                     Notification::make()
                         ->success()
                         ->title('Request Ready')
-                        ->body('Your grade request for '.$this->record->schoolYear->name.' is ready')
+                        ->body('Your grade request for '.$this->record->curriculum->program->name.' is ready')
                         ->sendToDatabase($this->record->student->user);
                 })
                 ->visible(fn($record): bool => $record->status == PrintRequestStatus::Processing),
@@ -90,7 +91,7 @@ class ViewGradeRequest extends ViewRecord
                     Notification::make()
                         ->success()
                         ->title('Request Completed')
-                        ->body('Your grade request for '.$this->record->schoolYear->name.' is completed')
+                        ->body('Your grade request for '.$this->record->curriculum->program->name.' is completed')
                         ->sendToDatabase($this->record->student->user);
                 })
                 ->visible(fn($record): bool => $record->status == PrintRequestStatus::Ready),
@@ -101,59 +102,35 @@ class ViewGradeRequest extends ViewRecord
                 ->schema([
                     TextInput::make('purpose')
                         ->required()
-                        ->default('Any')
+                        ->default($this->record->purpose ?? 'Any')
                         ->label('Purpose')
                         ->placeholder('Enter purpose')
                         ->maxLength(255),
-                    Select::make('year_level')
-                        ->required()
-                        ->label('Year Level')
-                        ->options([
-                            'first' => 'First Year',
-                            'second' => 'Second Year',
-                            'third' => 'Third Year',
-                            'fourth' => 'Fourth Year',
-                            'fifth' => 'Fifth Year',
-                        ]),
-                    Select::make('sem')
-                        ->required()
-                        ->label('Semester')
-                        ->options([
-                            '1st' => '1st Semester',
-                            '2nd' => '2nd Semester',
-                        ]),
                     TextInput::make('gwa')
                         ->required()
                         ->label('General Weighted Average (GWA)')
                         ->placeholder('Enter GWA')
                         ->maxLength(255)
                         ->default($gwa),
+                    TextInput::make('school_year')
+                        ->required()
+                        ->label('School Year')
+                        ->default(fn() => SchoolYear::current()->first()->name),
                 ])
                 ->action(function (array $data) {
                     $fileName = \Str::slug($this->record->student->getAttribute('full_name')). '-grade.pdf';
 
-                    $enrollment = Enrollment::where('school_year_id', $this->record->school_year_id)
-                        ->where('student_id', $this->record->student_id)
-                        ->latest()
-                        ->first();
+                    $curriculumSubjects = $this->record->curriculum->curriculumSubjects->where('year_level', $this->record->year_level)->where('semester', $this->record->semester);
 
-                    if (!$enrollment) {
-                        Notification::make()
-                            ->danger()
-                            ->title('Enrollment Not Found')
-                            ->body('Enrollment not found for the given school year and student')
-                            ->send();
-                    }
-
-                    $program = $enrollment->curriculum->program->name . ($enrollment->curriculum->program->major ? ' major in ' . $enrollment->curriculum->program->major : '');
-
-                    $template = view('pdfs.grades', [
-                        'enrollment' => $enrollment,
+                    $template = view('pdfs.grades-print', [
+                        'curriculumSubjects' => $curriculumSubjects,
                         'purpose' => data_get($data, 'purpose'),
-                        'year_level' => data_get($data, 'year_level'),
-                        'sem' => data_get($data, 'sem'),
+                        'year_level' => $this->record->year_level,
+                        'sem' => $this->record->semester,
                         'gwa' => data_get($data, 'gwa'),
-                        'program' => $program,
+                        'student_id' => $this->record->student_id,
+                        'student' => $this->record->student,
+                        'school_year' => data_get($data, 'school_year'),
                     ])->render();
 
                     Browsershot::html($template)

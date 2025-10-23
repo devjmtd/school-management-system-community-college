@@ -22,7 +22,10 @@ class GradeRequestsTable
     {
         return $table
             ->columns([
-                TextColumn::make('schoolYear.name'),
+                TextColumn::make('year_level'),
+                TextColumn::make('semester'),
+                TextColumn::make('curriculum.program.name')
+                    ->label('Program'),
                 TextColumn::make('status')
                     ->badge()
                     ->label('Status')
@@ -44,8 +47,11 @@ class GradeRequestsTable
                     ->schema([
                         Grid::make()
                             ->schema([
-                                TextEntry::make('schoolYear.name')
-                                    ->label('School Year'),
+                                TextEntry::make('year_level')
+                                    ->label('Year Level'),
+                                TextEntry::make('semester'),
+                                TextEntry::make('curriculum.program.name')
+                                    ->label('Program'),
                                 TextEntry::make('status')
                                     ->formatStateUsing(fn(?PrintRequestStatus $state) => $state?->name),
                                 TextEntry::make('created_at')
