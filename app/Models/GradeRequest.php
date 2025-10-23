@@ -73,6 +73,6 @@ class GradeRequest extends Model
 
     public function preparedBy(): BelongsTo
     {
-        return $this->belongsTo(Student::class, 'prepared_by');
+        return $this->belongsTo(User::class, 'prepared_by');
     }
 }

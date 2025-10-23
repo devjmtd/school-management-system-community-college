@@ -59,6 +59,7 @@ class AdminPortalPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->globalSearch(false)
             ->brandLogo(asset('logo.png'))
             ->brandLogoHeight('3rem')
             ->unsavedChangesAlerts()
